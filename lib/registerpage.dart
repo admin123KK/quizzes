@@ -9,6 +9,9 @@ class Registerpage extends StatefulWidget {
 }
 
 class _RegisterpageState extends State<Registerpage> {
+  late final _email = TextEditingController();
+  late final _password = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,16 +50,17 @@ class _RegisterpageState extends State<Registerpage> {
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
             child: TextFormField(
               decoration: InputDecoration(
-                labelText: 'Enter you full name',
+                labelText: 'Full name',
                 contentPadding: EdgeInsets.all(10),
                 prefixIcon: const Icon(Icons.person_outline),
                 labelStyle: const TextStyle(color: Colors.grey),
-                hintText: 'Full Name',
+                hintText: 'Enter a full name',
                 hintStyle: const TextStyle(color: Colors.grey),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(
+                focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(
                     color: Color(0XFFEF4A27),
                   ),
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderSide: const BorderSide(
@@ -70,18 +74,19 @@ class _RegisterpageState extends State<Registerpage> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
             child: TextFormField(
+              controller: _email,
               decoration: InputDecoration(
-                labelText: 'Enter your email',
+                labelText: 'Email',
                 contentPadding: EdgeInsets.all(10),
                 prefixIcon: const Icon(Icons.email_outlined),
                 labelStyle: const TextStyle(color: Colors.grey),
-                hintText: 'Email',
+                hintText: 'Enter a email',
                 hintStyle: const TextStyle(color: Colors.grey),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Color(0XFFEF4A27),
-                  ),
-                ),
+                focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(
+                      color: Color(0XFFEF4A27),
+                    ),
+                    borderRadius: BorderRadius.circular(20)),
                 enabledBorder: OutlineInputBorder(
                   borderSide: const BorderSide(
                     color: Color(0XFFEF4A27),
@@ -95,16 +100,17 @@ class _RegisterpageState extends State<Registerpage> {
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
             child: TextFormField(
               decoration: InputDecoration(
-                labelText: 'Enter your nationality',
+                labelText: 'Nationality',
                 contentPadding: EdgeInsets.all(10),
                 prefixIcon: const Icon(Icons.flag_circle_outlined),
                 labelStyle: const TextStyle(color: Colors.grey),
-                hintText: 'Nationality',
+                hintText: 'Enter your nationality',
                 hintStyle: const TextStyle(color: Colors.grey),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(
+                focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(
                     color: Color(0XFFEF4A27),
                   ),
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderSide: const BorderSide(
@@ -118,15 +124,17 @@ class _RegisterpageState extends State<Registerpage> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
             child: TextFormField(
+              controller: _password,
               decoration: InputDecoration(
-                labelText: 'Enter you new password',
+                labelText: 'New Password',
                 contentPadding: const EdgeInsets.all(10),
                 prefixIcon: const Icon(Icons.lock_outline),
                 labelStyle: const TextStyle(color: Colors.grey),
-                hintText: 'New Password',
+                hintText: 'Ente a password',
                 hintStyle: const TextStyle(color: Colors.grey),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  borderSide: const BorderSide(
                     color: Color(0XFFEF4A27),
                   ),
                 ),
@@ -142,15 +150,17 @@ class _RegisterpageState extends State<Registerpage> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
             child: TextFormField(
+              controller: _password,
               decoration: InputDecoration(
-                labelText: 'Confirm your password',
-                contentPadding: EdgeInsets.all(10),
+                labelText: 'Confirm password',
+                contentPadding: const EdgeInsets.all(10),
                 prefixIcon: const Icon(Icons.lock_outline),
                 labelStyle: const TextStyle(color: Colors.grey),
-                hintText: 'Cofirm Password',
+                hintText: 'Confirm your password',
                 hintStyle: const TextStyle(color: Colors.grey),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  borderSide: const BorderSide(
                     color: Color(0XFFEF4A27),
                   ),
                 ),

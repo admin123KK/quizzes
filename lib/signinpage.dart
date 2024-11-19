@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiznep/forgotpassword.dart';
 import 'package:quiznep/registerpage.dart';
 
 class Signinpage extends StatefulWidget {
@@ -108,12 +109,20 @@ class _SigninpageState extends State<Signinpage> {
           const SizedBox(
             height: 10,
           ),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 55),
-                child: const Text('Forgot Password?'),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Forgotpassword()));
+                  },
+                  child: const Text('Forgot Password?'),
+                ),
               ),
             ],
           ),
