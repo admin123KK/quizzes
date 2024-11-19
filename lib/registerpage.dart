@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiznep/signinpage.dart';
+import 'package:quiznep/verifypage.dart';
 
 class Registerpage extends StatefulWidget {
   const Registerpage({super.key});
@@ -11,6 +12,7 @@ class Registerpage extends StatefulWidget {
 class _RegisterpageState extends State<Registerpage> {
   late final _email = TextEditingController();
   late final _password = TextEditingController();
+  bool passToggle = true;
 
   @override
   Widget build(BuildContext context) {
@@ -125,69 +127,94 @@ class _RegisterpageState extends State<Registerpage> {
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
             child: TextFormField(
               controller: _password,
+              obscureText: passToggle,
               decoration: InputDecoration(
-                labelText: 'New Password',
-                contentPadding: const EdgeInsets.all(10),
-                prefixIcon: const Icon(Icons.lock_outline),
-                labelStyle: const TextStyle(color: Colors.grey),
-                hintText: 'Ente a password',
-                hintStyle: const TextStyle(color: Colors.grey),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: const BorderSide(
-                    color: Color(0XFFEF4A27),
+                  labelText: 'New Password',
+                  contentPadding: const EdgeInsets.all(10),
+                  prefixIcon: const Icon(Icons.lock_outline),
+                  labelStyle: const TextStyle(color: Colors.grey),
+                  hintText: 'Ente a password',
+                  hintStyle: const TextStyle(color: Colors.grey),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: const BorderSide(
+                      color: Color(0XFFEF4A27),
+                    ),
                   ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(
-                    color: Color(0XFFEF4A27),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(
+                      color: Color(0XFFEF4A27),
+                    ),
+                    borderRadius: BorderRadius.circular(30),
                   ),
-                  borderRadius: BorderRadius.circular(30),
-                ),
-              ),
+                  suffix: InkWell(
+                    onTap: () {
+                      setState(() {
+                        passToggle = !passToggle;
+                      });
+                    },
+                    child: Icon(
+                        passToggle ? Icons.visibility_off : Icons.visibility),
+                  )),
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
             child: TextFormField(
-              controller: _password,
+              // controller: _password,
               decoration: InputDecoration(
-                labelText: 'Confirm password',
-                contentPadding: const EdgeInsets.all(10),
-                prefixIcon: const Icon(Icons.lock_outline),
-                labelStyle: const TextStyle(color: Colors.grey),
-                hintText: 'Confirm your password',
-                hintStyle: const TextStyle(color: Colors.grey),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: const BorderSide(
-                    color: Color(0XFFEF4A27),
+                  labelText: 'Confirm password',
+                  contentPadding: const EdgeInsets.all(10),
+                  prefixIcon: const Icon(Icons.lock_outline),
+                  labelStyle: const TextStyle(color: Colors.grey),
+                  hintText: 'Confirm your password',
+                  hintStyle: const TextStyle(color: Colors.grey),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: const BorderSide(
+                      color: Color(0XFFEF4A27),
+                    ),
                   ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(
-                    color: Color(0XFFEF4A27),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(
+                      color: Color(0XFFEF4A27),
+                    ),
+                    borderRadius: BorderRadius.circular(30),
                   ),
-                  borderRadius: BorderRadius.circular(30),
-                ),
-              ),
+                  suffix: InkWell(
+                    onTap: () {
+                      setState(() {
+                        passToggle = !passToggle;
+                      });
+                    },
+                    child: Icon(
+                        passToggle ? Icons.visibility_off : Icons.visibility),
+                  )),
             ),
           ),
           const SizedBox(
             height: 30,
           ),
           Center(
-            child: Container(
-              height: 37,
-              width: 200,
-              decoration: BoxDecoration(
-                color: const Color(0XFFEF4A27),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Center(
-                child: Text(
-                  'Register',
-                  style: TextStyle(color: Colors.black),
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const Verifypage()));
+              },
+              child: Container(
+                height: 37,
+                width: 200,
+                decoration: BoxDecoration(
+                  color: const Color(0XFFEF4A27),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Center(
+                  child: Text(
+                    'Register',
+                    style: TextStyle(color: Colors.black),
+                  ),
                 ),
               ),
             ),

@@ -12,6 +12,7 @@ class Signinpage extends StatefulWidget {
 class _SigninpageState extends State<Signinpage> {
   late final _email = TextEditingController();
   late final _password = TextEditingController();
+  bool passToggle = true;
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +89,7 @@ class _SigninpageState extends State<Signinpage> {
             ),
             child: TextFormField(
               controller: _password,
+              obscureText: passToggle,
               decoration: InputDecoration(
                   hintText: 'Enter a password',
                   labelText: 'Password',
@@ -102,6 +104,15 @@ class _SigninpageState extends State<Signinpage> {
                   enabledBorder: OutlineInputBorder(
                     borderSide: const BorderSide(color: Colors.orange),
                     borderRadius: BorderRadius.circular(30),
+                  ),
+                  suffix: InkWell(
+                    onTap: () {
+                      setState(() {
+                        passToggle = !passToggle;
+                      });
+                    },
+                    child: Icon(
+                        passToggle ? Icons.visibility_off : Icons.visibility),
                   ),
                   prefixIcon: const Icon(Icons.lock_outline)),
             ),
