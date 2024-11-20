@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiznep/explorepage.dart';
 
 class Welcompage extends StatefulWidget {
   const Welcompage({super.key});
@@ -8,6 +9,31 @@ class Welcompage extends StatefulWidget {
 }
 
 class _WelcompageState extends State<Welcompage> {
+  String greeting = "";
+
+  @override
+  void initState() {
+    updateGreeting();
+    super.initState();
+  }
+
+  void updateGreeting() {
+    DateTime now = DateTime.now();
+
+    int hour = now.hour;
+    if (hour < 12) {
+      setState(() {
+        greeting = "Good Morning";
+      });
+    } else if (hour < 17) {
+      setState(() {
+        greeting = "Good Aftenoon";
+      });
+    } else {
+      greeting = "Good Evening";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,8 +49,8 @@ class _WelcompageState extends State<Welcompage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Good Morning,\nManju Karki',
+                    Text(
+                      '$greeting,\nManju Karki',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Color(0XFFEF4A27),
@@ -75,24 +101,32 @@ class _WelcompageState extends State<Welcompage> {
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(17),
                     topRight: Radius.circular(17))),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Icon(
+                const Icon(
                   Icons.home_outlined,
                   size: 31,
                 ),
-                Icon(
-                  Icons.explore_outlined,
-                  size: 31,
-                  color: Colors.white,
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Explorepage()));
+                  },
+                  child: const Icon(
+                    Icons.explore_outlined,
+                    size: 31,
+                    color: Colors.white,
+                  ),
                 ),
-                Icon(
+                const Icon(
                   Icons.stacked_bar_chart_outlined,
                   size: 31,
                   color: Colors.white,
                 ),
-                Icon(
+                const Icon(
                   Icons.person_outline,
                   size: 31,
                   color: Colors.white,
