@@ -21,7 +21,16 @@ class _StartpageState extends State<Startpage> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 90),
               child: InkWell(
-                onTap: () {
+                onTap: () async {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const Center(
+                            child: CircularProgressIndicator(
+                          color: Color(0XFFEF4A27),
+                        ));
+                      });
+                  await Future.delayed(Duration(seconds: 1));
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => Signinpage()));
                 },

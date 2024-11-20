@@ -152,7 +152,18 @@ class _SigninpageState extends State<Signinpage> {
             ),
             Center(
               child: InkWell(
-                onTap: () {
+                onTap: () async {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const Center(
+                          child: const CircularProgressIndicator(
+                            color: Color(0XFFEF4A27),
+                          ),
+                        );
+                      });
+                  await Future.delayed(Duration(seconds: 2));
+                  Navigator.pop(context);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -179,7 +190,7 @@ class _SigninpageState extends State<Signinpage> {
                   style: TextStyle(color: Colors.grey),
                 ),
                 InkWell(
-                  onTap: () {
+                  onTap: () async {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
