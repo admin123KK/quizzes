@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quiznep/forgotpassword.dart';
 import 'package:quiznep/registerpage.dart';
+import 'package:quiznep/welcompage.dart';
 
 class Signinpage extends StatefulWidget {
   const Signinpage({super.key});
@@ -56,7 +57,6 @@ class _SigninpageState extends State<Signinpage> {
                 ),
               ),
             ),
-
             const Center(
               child: Text(
                 'Login to your account',
@@ -151,13 +151,21 @@ class _SigninpageState extends State<Signinpage> {
               height: 40,
             ),
             Center(
-              child: Container(
-                height: 37,
-                width: 200,
-                decoration: BoxDecoration(
-                    color: const Color(0XFFEF4A27),
-                    borderRadius: BorderRadius.circular(27)),
-                child: const Center(child: Text('Login')),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Welcompage()));
+                },
+                child: Container(
+                  height: 37,
+                  width: 200,
+                  decoration: BoxDecoration(
+                      color: const Color(0XFFEF4A27),
+                      borderRadius: BorderRadius.circular(27)),
+                  child: const Center(child: Text('Login')),
+                ),
               ),
             ),
             const SizedBox(
@@ -181,20 +189,9 @@ class _SigninpageState extends State<Signinpage> {
                     ' Register',
                     style: TextStyle(color: Color(0XFFEF4A27)),
                   ),
-                )
+                ),
               ],
             ),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-            //   child: Container(
-            //     height: 30,
-            //     width: 500,
-            //     decoration: BoxDecoration(
-            //         color: Colors.grey.shade300,
-            //         borderRadius: BorderRadius.circular(10)),
-            //     child: TextFormField(),
-            //   ),
-            // ),
           ],
         ),
       ),

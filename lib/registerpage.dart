@@ -12,6 +12,7 @@ class Registerpage extends StatefulWidget {
 class _RegisterpageState extends State<Registerpage> {
   late final _email = TextEditingController();
   late final _password = TextEditingController();
+  late final _confrimPass = TextEditingController();
   bool passToggle = true;
 
   @override
@@ -173,7 +174,7 @@ class _RegisterpageState extends State<Registerpage> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
               child: TextFormField(
-                // controller: _password,
+                controller: _confrimPass,
                 decoration: InputDecoration(
                     labelText: 'Confirm password',
                     contentPadding: const EdgeInsets.all(10),
