@@ -15,10 +15,11 @@ class _ExplorepageState extends State<Explorepage> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          const SingleChildScrollView(
+          SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
+                const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 30, vertical: 50),
                   child: Text(
                     'Explore',
@@ -26,6 +27,78 @@ class _ExplorepageState extends State<Explorepage> {
                       fontWeight: FontWeight.bold,
                       fontSize: 30,
                       color: Color(0XFFEF4A27),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Container(
+                    height: 40,
+                    width: 400,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(17),
+                    ),
+                    child: const TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Search',
+                          hintStyle: TextStyle(color: Colors.grey),
+                          prefixIcon: Icon(
+                            Icons.search_rounded,
+                            color: Colors.grey,
+                          ),
+                          contentPadding: EdgeInsets.all(10)),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  child: Container(
+                    height: 400,
+                    width: 370,
+                    decoration: BoxDecoration(
+                        color: Colors.grey.shade300,
+                        borderRadius: BorderRadius.circular(17)),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'Top Ranks',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Container(
+                    height: 400,
+                    decoration: BoxDecoration(
+                        color: Colors.grey.shade300,
+                        borderRadius: BorderRadius.circular(17)),
+                    child: Expanded(
+                      child: ListView.builder(
+                          itemCount: 2,
+                          itemBuilder: (context, index) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 40),
+                                  child: Container(
+                                    height: 120,
+                                    width: 130,
+                                    decoration: BoxDecoration(
+                                        color: Color(0XFFEF4A27),
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
                     ),
                   ),
                 ),
