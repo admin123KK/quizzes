@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiznep/explorepage.dart';
+import 'package:quiznep/profilepage.dart';
 
 class Welcompage extends StatefulWidget {
   const Welcompage({super.key});
@@ -285,10 +286,18 @@ class _WelcompageState extends State<Welcompage> {
                     size: 31,
                     color: Colors.white,
                   ),
-                  const Icon(
-                    Icons.person_outline,
-                    size: 31,
-                    color: Colors.white,
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Profilepage()));
+                    },
+                    child: const Icon(
+                      Icons.person_outline,
+                      size: 31,
+                      color: Colors.white,
+                    ),
                   )
                 ],
               ),
