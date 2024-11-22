@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:quiznep/registerpage.dart';
+import 'package:quiznep/signinpage.dart';
+import 'package:quiznep/verifypage.dart';
 import 'package:quiznep/welcompage.dart';
 
 class Explorepage extends StatefulWidget {
@@ -62,45 +65,42 @@ class _ExplorepageState extends State<Explorepage> {
                         color: Colors.grey.shade300,
                         borderRadius: BorderRadius.circular(17)),
                     child: const Padding(
-                      padding: EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(12.0),
                       child: Text(
-                        'Top Ranks',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        ' TOP PICKS',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 17),
                       ),
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Container(
-                    height: 400,
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(17)),
-                    child: Expanded(
-                      child: ListView.builder(
-                          itemCount: 2,
-                          itemBuilder: (context, index) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 40),
-                                  child: Container(
-                                    height: 120,
-                                    width: 130,
-                                    decoration: BoxDecoration(
-                                        color: Color(0XFFEF4A27),
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                  ),
-                                ),
-                              ],
-                            );
-                          }),
-                    ),
+                const Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                  child: Text(
+                    'Categories',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                   ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                  ),
+                  child: GridView.count(
+                      crossAxisCount: 4,
+                      crossAxisSpacing: 10,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      children: [
+                        buildCategoryBox('Maths', Icons.calculate, Colors.red,
+                            context, Welcompage()),
+                        buildCategoryBox('History', Icons.book_outlined,
+                            Colors.red, context, Signinpage()),
+                        buildCategoryBox('Science', Icons.science_outlined,
+                            Colors.red, context, Registerpage()),
+                        buildCategoryBox('Sports', Icons.sports_soccer,
+                            Colors.red, context, Verifypage())
+                      ]),
                 ),
               ],
             ),
@@ -155,4 +155,39 @@ class _ExplorepageState extends State<Explorepage> {
       ),
     );
   }
+}
+
+Widget buildCategoryBox(
+    String title, IconData icon, Color color, BuildContext context, page) {
+  return InkWell(
+    onTap: () {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => page));
+      // Navigate to the respective page
+    },
+    child: Container(
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            size: 40,
+            color: Colors.white,
+          ),
+          const SizedBox(height: 10),
+          Text(
+            title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
