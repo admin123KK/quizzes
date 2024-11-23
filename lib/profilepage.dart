@@ -74,6 +74,62 @@ class _ProfilepageState extends State<Profilepage> {
                                   color: Colors.black,
                                 ),
                               ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 15, horizontal: 20),
+                                child: Container(
+                                  height: 110,
+                                  width: 500,
+                                  decoration: BoxDecoration(
+                                    color: const Color(
+                                      0XFFEF4A27,
+                                    ),
+                                    borderRadius: BorderRadius.circular(11),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        _buildStateItem(Icons.star_outline,
+                                            'Points', '1000'),
+                                        const SizedBox(
+                                          width: 20,
+                                        ),
+                                        _builDivider(),
+                                        const SizedBox(
+                                          width: 30,
+                                        ),
+                                        _buildStateItem(Icons.public_outlined,
+                                            'World', '#1'),
+                                        const SizedBox(
+                                          width: 20,
+                                        ),
+                                        _builDivider(),
+                                        const SizedBox(
+                                          width: 30,
+                                        ),
+                                        _buildStateItem(Icons.groups_outlined,
+                                            'Local', '#69'),
+                                        const SizedBox(
+                                          width: 20,
+                                        ),
+                                        _builDivider(),
+                                        const SizedBox(
+                                          width: 30,
+                                        ),
+                                        _buildStateItem(Icons.whatshot_outlined,
+                                            'Streak', '369'),
+                                        const SizedBox(
+                                          width: 20,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
                             ],
                           ),
                         ),
@@ -148,4 +204,42 @@ class _ProfilepageState extends State<Profilepage> {
       ),
     );
   }
+}
+
+Widget _buildStateItem(IconData icon, String label, String value) {
+  return Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Icon(
+        icon,
+        size: 30,
+        color: Colors.black,
+      ),
+      const SizedBox(
+        height: 5,
+      ),
+      Text(
+        label,
+        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+      ),
+      const SizedBox(
+        height: 10,
+      ),
+      Text(
+        value,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      )
+    ],
+  );
+}
+
+Widget _builDivider() {
+  return Container(
+    height: 70,
+    width: 1,
+    color: Colors.white.withOpacity(0.6),
+  );
 }
