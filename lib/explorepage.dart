@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiznep/mathsqpage.dart';
 import 'package:quiznep/profilepage.dart';
 import 'package:quiznep/registerpage.dart';
 import 'package:quiznep/signinpage.dart';
@@ -94,7 +95,7 @@ class _ExplorepageState extends State<Explorepage> {
                       physics: NeverScrollableScrollPhysics(),
                       children: [
                         buildCategoryBox('Maths', Icons.calculate, Colors.red,
-                            context, Welcompage()),
+                            context, Quizpage()),
                         buildCategoryBox('History', Icons.book_outlined,
                             Colors.red, context, Signinpage()),
                         buildCategoryBox('Science', Icons.science_outlined,
