@@ -129,7 +129,137 @@ class _ProfilepageState extends State<Profilepage> {
                                     ),
                                   ),
                                 ),
-                              )
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Text(
+                                        'Badge',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                      Container(
+                                        height: 8,
+                                        width: 8,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            color: Color(0XFFEF4A27)),
+                                      )
+                                    ],
+                                  ),
+                                  Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Text(
+                                        'Stats',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20),
+                                      ),
+                                      Container(
+                                        height: 8,
+                                        width: 8,
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey,
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
+                                      )
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      const Text(
+                                        'Details',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20),
+                                      ),
+                                      Container(
+                                        height: 8,
+                                        width: 8,
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey,
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Column(
+                                children: [
+                                  Container(
+                                    height: 100,
+                                    width: 100,
+                                    child: Image.asset(
+                                        'assets/image/firstbadge.png'),
+                                  ),
+                                  const Text('Rank 1')
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Container(
+                                    height: 100,
+                                    width: 100,
+                                    child: Image.asset(
+                                        'assets/image/secondbadge.png'),
+                                  ),
+                                  const Text('Rank 2')
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 40,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Column(
+                                children: [
+                                  Container(
+                                    height: 100,
+                                    width: 100,
+                                    child: Image.asset(
+                                        'assets/image/thirdbadge.png'),
+                                  ),
+                                  const Text('Rank 3')
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Container(
+                                    height: 100,
+                                    width: 100,
+                                    child: Image.asset(
+                                        'assets/image/streakbadge.png'),
+                                  ),
+                                  const Text('Member')
+                                ],
+                              ),
                             ],
                           ),
                         ),
@@ -220,7 +350,8 @@ Widget _buildStateItem(IconData icon, String label, String value) {
       ),
       Text(
         label,
-        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+        style:
+            const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
       ),
       const SizedBox(
         height: 10,

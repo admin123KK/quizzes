@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiznep/profilepage.dart';
 import 'package:quiznep/registerpage.dart';
 import 'package:quiznep/signinpage.dart';
 import 'package:quiznep/verifypage.dart';
@@ -142,10 +143,18 @@ class _ExplorepageState extends State<Explorepage> {
                     size: 31,
                     color: Colors.white,
                   ),
-                  const Icon(
-                    Icons.person_outline,
-                    size: 31,
-                    color: Colors.white,
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Profilepage()));
+                    },
+                    child: const Icon(
+                      Icons.person_outline,
+                      size: 31,
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),
