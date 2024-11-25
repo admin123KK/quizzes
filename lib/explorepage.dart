@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:quiznep/historypage.dart';
 import 'package:quiznep/mathsqpage.dart';
 import 'package:quiznep/profilepage.dart';
 import 'package:quiznep/registerpage.dart';
-import 'package:quiznep/signinpage.dart';
 import 'package:quiznep/verifypage.dart';
 import 'package:quiznep/welcompage.dart';
 
@@ -97,7 +97,7 @@ class _ExplorepageState extends State<Explorepage> {
                         buildCategoryBox('Maths', Icons.calculate, Colors.red,
                             context, Quizpage()),
                         buildCategoryBox('History', Icons.book_outlined,
-                            Colors.red, context, Signinpage()),
+                            Colors.red, context, Historypage()),
                         buildCategoryBox('Science', Icons.science_outlined,
                             Colors.red, context, Registerpage()),
                         buildCategoryBox('Sports', Icons.sports_soccer,

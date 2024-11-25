@@ -2,19 +2,19 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-class Quizpage extends StatefulWidget {
-  const Quizpage({super.key});
+class Historypage extends StatefulWidget {
+  const Historypage({super.key});
 
   @override
-  State<Quizpage> createState() => _QuizpageState();
+  State<Historypage> createState() => _HistorypageState();
 }
 
-class _QuizpageState extends State<Quizpage> {
-  int currentqIndex = 0; // Start with the first question
-  int totalPoints = 0; // Track total points
+class _HistorypageState extends State<Historypage> {
+  int currentIndex = 0;
+  int totalPoints = 0;
   late Timer timer;
   int timeLeft = 5;
-  bool answered = false; // Track if the current question has been answered
+  bool answered = false;
 
   @override
   void initState() {
@@ -24,12 +24,12 @@ class _QuizpageState extends State<Quizpage> {
 
   @override
   void dispose() {
-    timer.cancel();
+    timer.cancel;
     super.dispose();
   }
 
   void startTimer() {
-    timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
       setState(() {
         if (timeLeft > 0) {
           timeLeft--;
@@ -42,23 +42,23 @@ class _QuizpageState extends State<Quizpage> {
 
   void moveToNextQuestion() {
     setState(() {
-      if (currentqIndex < question.length - 1) {
-        currentqIndex++;
+      if (currentIndex < question.length - 1) {
+        currentIndex++;
         timeLeft = 5;
-        answered = false; // Reset answer state for the next question
+        answered = false;
       } else {
         timer.cancel();
-        showResultDialog(); // Show total score dialog
+        showResultDialog();
       }
     });
   }
 
   void checkAnswer(int index) {
-    if (answered) return; // Prevent multiple answers for the same question
+    if (answered) return;
     setState(() {
       answered = true;
-      if (options[currentqIndex][index] == correctAnswers[currentqIndex]) {
-        totalPoints += 10; // Add points for correct answer
+      if (options[currentIndex][index] == correctAnswers[currentIndex]) {
+        totalPoints += 10;
       }
       Future.delayed(const Duration(seconds: 1), () {
         moveToNextQuestion();
@@ -68,81 +68,88 @@ class _QuizpageState extends State<Quizpage> {
 
   void showResultDialog() {
     showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Quiz Completed'),
-          content: Text('Your total score is: $totalPoints'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // Close the dialog
-                Navigator.pop(context); // Go back to the previous screen
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Quiz'),
+            content: Text('Your total points is : $totalPoints'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                  child: const Text('OK'))
+            ],
+          );
+        });
   }
 
   final List<String> question = [
-    'Which of the Nepali player is most popular in BBL?',
-    'Which of the Nepali player is most popular in NPL?',
-    'Which of the Nepali player is most popular in CPL?',
-    'Which of the Nepali player is most popular in DPL?',
-    'Which of the Nepali player is most popular in EPL?'
+    'Which event is often considered the start of the modern era?',
+    'Who was the first emperor of the Roman Empire?',
+    'Which treaty ended World War I?',
+    'What was the primary cause of the Cold War?',
+    'What year did the Berlin Wall fall, symbolizing the end of the Cold War?',
   ];
-
   final List<List<String>> options = [
-    ['Sandeep Lamichane', 'Parash Khadka', 'Shakti Gauchan', 'Sharad Vesawkar'],
-    ['Sandeep Lamichane', 'Parash Khadka', 'Shakti Gauchan', 'Binod Das'],
-    ['Paras Khadka', 'Sharad Vesawkar', 'Dipendra Airee', 'Sandeep Lamichane'],
-    ['Gyanendra Malla', 'Shakti Gauchan', 'Rohit Paudel', 'Sandeep Lamichane'],
-    ['Paras Khadka', 'Dipendra Airee', 'Kushal Bhurtel', 'Sandeep Lamichane'],
+    [
+      'The Fall of Constantinople (1453)',
+      'The American Revolution (1775)',
+      ' The Industrial Revolution (1760-1840)',
+      'The French Revolution (1789)'
+    ],
+    ['Julius Caesar', 'Augustus Caesar', 'Nero', ' Constantine'],
+    [
+      'Treaty of Versailles',
+      'Treaty of Ghent',
+      ' Treaty of Paris',
+      ' Treaty of Westphalia'
+    ],
+    [
+      'A. Religious conflicts',
+      'Ideological differences between the USA and USSR',
+      'Disputes over territorial boundaries',
+      ' Competition for trade routes'
+    ],
+    [' Roman Empire', 'British Empire', 'Ottoman Empire', ' Mongol Empire']
   ];
 
   final List<String> correctAnswers = [
-    'Sandeep Lamichane',
-    'Parash Khadka',
-    'Sandeep Lamichane',
-    'Sandeep Lamichane',
-    'Sandeep Lamichane',
+    'The Fall of Constantinople (1453)',
+    'Augustus Caesar',
+    'Treaty of Versailles',
+    'Ideological differences between the USA and USSR',
+    'British Empire'
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0XFFEF4A27),
       appBar: AppBar(
+        leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: const Icon(Icons.arrow_back_ios)),
         backgroundColor: const Color(0XFFEF4A27),
-        actions: [
+        title: const Text(
+          'Histroy',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        actions: const [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Container(
-              height: 30,
-              width: 30,
-              child: const Icon(
-                Icons.timer_outlined,
-                size: 35,
-                color: Colors.black,
-              ),
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Icon(
+              Icons.timer_outlined,
+              color: Colors.black,
+              size: 30,
             ),
-          ),
+          )
         ],
         centerTitle: true,
-        title: const Text(
-          'Maths',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        leading: InkWell(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: const Icon(Icons.arrow_back_ios),
-        ),
       ),
-      backgroundColor: const Color(0XFFEF4A27),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -162,7 +169,6 @@ class _QuizpageState extends State<Quizpage> {
                       ),
                     ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(
@@ -171,39 +177,42 @@ class _QuizpageState extends State<Quizpage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'QUESTION ${currentqIndex + 1} OF ${question.length}',
+                                'QUESTION ${currentIndex + 1} OF ${question.length}',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
                               CircleAvatar(
                                 backgroundColor: const Color(0XFFEF4A27),
-                                child: Center(
-                                    child: Text(
-                                  '$timeLeft',
-                                  style: TextStyle(color: Colors.white),
-                                )),
+                                child: Text(
+                                  '${timeLeft}',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
                               ),
                             ],
                           ),
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(
+                          height: 10,
+                        ),
                         Center(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 30),
                             child: Text(
-                              question[currentqIndex],
+                              question[currentIndex],
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 17),
                             ),
                           ),
                         ),
                         const SizedBox(height: 20),
-                        ...options[currentqIndex].asMap().entries.map(
+                        ...options[currentIndex].asMap().entries.map(
                           (entry) {
                             int idx = entry.key;
                             String option = entry.value;
                             bool isCorrect =
-                                option == correctAnswers[currentqIndex];
+                                option == correctAnswers[currentIndex];
                             return GestureDetector(
                               onTap: () => checkAnswer(idx),
                               child: Container(
@@ -243,11 +252,11 @@ class _QuizpageState extends State<Quizpage> {
                         ).toList(),
                       ],
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
-          ),
+          )
         ],
       ),
     );
