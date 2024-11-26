@@ -132,7 +132,7 @@ class _QuizpageState extends State<Quizpage> {
         ],
         centerTitle: true,
         title: const Text(
-          'Maths',
+          'Sports',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         leading: InkWell(

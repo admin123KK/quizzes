@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:quiznep/Sciencepage.dart';
 import 'package:quiznep/historypage.dart';
+import 'package:quiznep/mathspage.dart';
 import 'package:quiznep/mathsqpage.dart';
 import 'package:quiznep/profilepage.dart';
-import 'package:quiznep/verifypage.dart';
 import 'package:quiznep/welcompage.dart';
 
 class Explorepage extends StatefulWidget {
@@ -95,13 +95,13 @@ class _ExplorepageState extends State<Explorepage> {
                       physics: NeverScrollableScrollPhysics(),
                       children: [
                         buildCategoryBox('Maths', Icons.calculate, Colors.red,
-                            context, Quizpage()),
+                            context, Mathpage()),
                         buildCategoryBox('History', Icons.book_outlined,
                             Colors.red, context, Historypage()),
                         buildCategoryBox('Science', Icons.science_outlined,
                             Colors.red, context, Sciencepage()),
                         buildCategoryBox('Sports', Icons.sports_soccer,
-                            Colors.red, context, Verifypage())
+                            Colors.red, context, Quizpage())
                       ]),
                 ),
               ],
