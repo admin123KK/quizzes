@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:quiznep/signinpage.dart';
 import 'package:quiznep/verifypage.dart';
@@ -10,10 +11,25 @@ class Registerpage extends StatefulWidget {
 }
 
 class _RegisterpageState extends State<Registerpage> {
-  late final _email = TextEditingController();
-  late final _password = TextEditingController();
-  late final _confrimPass = TextEditingController();
+  // late final _email = TextEditingController();
+  late final TextEditingController _email;
+  late final TextEditingController _password;
+  late final TextEditingController _confrimPass;
   bool passToggle = true;
+
+  @override
+  void initState() {
+    _email = TextEditingController();
+    _password = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _email.dispose();
+    _password.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -221,7 +237,31 @@ class _RegisterpageState extends State<Registerpage> {
                         );
                       });
                   await Future.delayed(Duration(seconds: 2));
-                  Navigator.pop(context);
+                  final email = _email.text;
+                  final password = _password.text;
+                  try {
+                    UserCredential userCredential = await FirebaseAuth.instance
+                        .createUserWithEmailAndPassword(
+                            email: email, password: password);
+                    User? user = userCredential.user;
+                    if (user != null && !user.emailVerified) {
+                      await user.sendEmailVerification();
+                    }
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Signinpage()));
+                  } on FirebaseAuthException catch (e) {
+                    Navigator.pop(context);
+                    if (e.code == 'emal-already-in-use') {
+                      showErrorDialgo(context, 'Email already used');
+                    } else if (e.code == 'invali-email') {
+                      showErrorDialgo(context, 'Invalid Email');
+                    } else if (e.code == 'weak-password') {
+                      showErrorDialgo(context, 'Poor password');
+                    } else {
+                      showErrorDialgo(context, 'Something went wrong');
+                    }
+                  }
+
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -272,4 +312,37 @@ class _RegisterpageState extends State<Registerpage> {
       ),
     );
   }
+}
+
+Future<void> showErrorDialgo(
+  BuildContext context,
+  String text,
+) {
+  return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text(' Error occured'),
+          icon: Icon(Icons.cancel),
+          content: Text(
+            textAlign: TextAlign.center,
+            text,
+            style: const TextStyle(color: Colors.red),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'OK',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF91AD13),
+                ),
+              ),
+            ),
+          ],
+        );
+      });
 }

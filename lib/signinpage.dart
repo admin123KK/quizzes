@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:quiznep/forgotpassword.dart';
 import 'package:quiznep/registerpage.dart';
@@ -11,8 +12,8 @@ class Signinpage extends StatefulWidget {
 }
 
 class _SigninpageState extends State<Signinpage> {
-  late final _email = TextEditingController();
-  late final _password = TextEditingController();
+  late final TextEditingController _email;
+  late final TextEditingController _password;
   bool passToggle = true;
 
   @override
@@ -162,12 +163,35 @@ class _SigninpageState extends State<Signinpage> {
                           ),
                         );
                       });
-                  await Future.delayed(Duration(seconds: 2));
-                  Navigator.pop(context);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const Welcompage()));
+
+                  final email = _email.text;
+                  final password = _password.text;
+
+                  try {
+                    UserCredential userCredential = await FirebaseAuth.instance
+                        .signInWithEmailAndPassword(
+                            email: email, password: password);
+
+                    User? user = userCredential.user;
+                    if (user != null && !user.emailVerified) {}
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Welcompage()));
+                  } on FirebaseAuthException catch (e) {
+                    Navigator.of(context).pop();
+                    if (e.code == 'invalid-email') {
+                      showErrorDialgo(context, 'Invalid Email ');
+                    } else if (e.code == 'wrong-password') {
+                      showErrorDialgo(context, 'passowrd invalid');
+                    } else if (e.code == 'invalid-credential') {
+                      showErrorDialgo(
+                          context, 'invalid credential check password');
+                    } else {
+                      print(e.code);
+                      showErrorDialgo(context, 'Something went wrong');
+                    }
+                  }
                 },
                 child: Container(
                   height: 37,
