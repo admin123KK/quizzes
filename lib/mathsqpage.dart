@@ -71,15 +71,31 @@ class _QuizpageState extends State<Quizpage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Quiz Completed'),
-          content: Text('Your total score is: $totalPoints'),
+          title: const Center(
+            child: Text('Quiz Result'),
+          ),
+          icon: const Icon(
+            Icons.sports_basketball_outlined,
+            color: Colors.black,
+          ),
+          content: Center(
+            child: Text(
+              'Your total score is: $totalPoints',
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.green),
+            ),
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context); // Close the dialog
                 Navigator.pop(context); // Go back to the previous screen
               },
-              child: const Text('OK'),
+              child: const Text(
+                'OK',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Color(0XFFEF4A27)),
+              ),
             ),
           ],
         );

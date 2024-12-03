@@ -71,15 +71,33 @@ class _SciencepageState extends State<Sciencepage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text('Quiz'),
-            content: Text('Your Total Point is:$totalPoints'),
+            icon: const Icon(
+              Icons.science_outlined,
+              color: Colors.black,
+            ),
+            title: const Center(
+                child: Text(
+              'Quiz Result',
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+            )),
+            content: Center(
+                child: Text(
+              'Your Total Point is:$totalPoints',
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.green),
+            )),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                   Navigator.pop(context);
                 },
-                child: const Text('OK'),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Color(0XFFEF4A27)),
+                ),
               )
             ],
           );
