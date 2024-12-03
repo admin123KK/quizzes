@@ -11,16 +11,16 @@ class Registerpage extends StatefulWidget {
 }
 
 class _RegisterpageState extends State<Registerpage> {
-  // late final _email = TextEditingController();
-  late final TextEditingController _email;
-  late final TextEditingController _password;
-  late final TextEditingController _confrimPass;
+  late final _email = TextEditingController();
+  late final _password = TextEditingController();
+  late final _confrimPass = TextEditingController();
   bool passToggle = true;
 
   @override
   void initState() {
-    _email = TextEditingController();
-    _password = TextEditingController();
+    _email.text;
+    _password.text;
+    _confrimPass.text;
     super.initState();
   }
 

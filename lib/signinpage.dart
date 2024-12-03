@@ -12,8 +12,8 @@ class Signinpage extends StatefulWidget {
 }
 
 class _SigninpageState extends State<Signinpage> {
-  late final TextEditingController _email;
-  late final TextEditingController _password;
+  late final _email = TextEditingController();
+  late final _password = TextEditingController();
   bool passToggle = true;
 
   @override
