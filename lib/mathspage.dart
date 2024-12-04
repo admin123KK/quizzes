@@ -76,11 +76,12 @@ class _MathpageState extends State<Mathpage> {
               color: Colors.black,
             ),
             title: const Center(
-                child: Text(
-              'Quiz Result',
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-            )),
+              child: Text(
+                'Quiz Result',
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+              ),
+            ),
             content: Center(
                 child: Text(
               'You total point is :${totalPoints}',

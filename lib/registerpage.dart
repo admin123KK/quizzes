@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:quiznep/signinpage.dart';
-import 'package:quiznep/verifypage.dart';
 
 class Registerpage extends StatefulWidget {
   const Registerpage({super.key});
@@ -237,8 +236,17 @@ class _RegisterpageState extends State<Registerpage> {
                         );
                       });
                   await Future.delayed(Duration(seconds: 2));
+                  Navigator.pop(context);
+
                   final email = _email.text;
                   final password = _password.text;
+                  final confirmPassword = _confrimPass.text.trim();
+                  if (password != confirmPassword) {
+                    showErrorDialgo(context, 'Passwords do not match');
+
+                    return;
+                  }
+
                   try {
                     UserCredential userCredential = await FirebaseAuth.instance
                         .createUserWithEmailAndPassword(
@@ -251,21 +259,22 @@ class _RegisterpageState extends State<Registerpage> {
                         MaterialPageRoute(builder: (context) => Signinpage()));
                   } on FirebaseAuthException catch (e) {
                     Navigator.pop(context);
-                    if (e.code == 'emal-already-in-use') {
+                    if (e.code == 'email-already-in-use') {
                       showErrorDialgo(context, 'Email already used');
-                    } else if (e.code == 'invali-email') {
+                    } else if (e.code == 'invalid-email') {
                       showErrorDialgo(context, 'Invalid Email');
                     } else if (e.code == 'weak-password') {
                       showErrorDialgo(context, 'Poor password');
                     } else {
                       showErrorDialgo(context, 'Something went wrong');
+                      print(e.code);
                     }
                   }
 
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const Verifypage()));
+                  //  Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //           builder: (context) => const Verifypage()));
                 },
                 child: Container(
                   height: 37,
