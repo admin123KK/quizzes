@@ -75,19 +75,16 @@ class _MathpageState extends State<Mathpage> {
               Icons.calculate_outlined,
               color: Colors.black,
             ),
-            title: const Center(
-              child: Text(
-                'Quiz Result',
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-              ),
+            title: const Text(
+              'Quiz Result',
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
             ),
-            content: Center(
-                child: Text(
+            content: Text(
               'You total point is :${totalPoints}',
               style: const TextStyle(
                   fontWeight: FontWeight.bold, color: Colors.green),
-            )),
+            ),
             actions: [
               TextButton(
                   onPressed: () {
@@ -171,7 +168,7 @@ class _MathpageState extends State<Mathpage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'QUESTION${currentIndex + 1}OF ${question.length}',
+                            'QUESTION${currentIndex + 1} OF ${question.length}',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           CircleAvatar(

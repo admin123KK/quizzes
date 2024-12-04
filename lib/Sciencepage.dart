@@ -75,18 +75,16 @@ class _SciencepageState extends State<Sciencepage> {
               Icons.science_outlined,
               color: Colors.black,
             ),
-            title: const Center(
-                child: Text(
+            title: const Text(
               'Quiz Result',
               style:
                   TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-            )),
-            content: Center(
-                child: Text(
+            ),
+            content: Text(
               'Your Total Point is:$totalPoints',
               style: const TextStyle(
                   fontWeight: FontWeight.bold, color: Colors.green),
-            )),
+            ),
             actions: [
               TextButton(
                 onPressed: () {
@@ -174,7 +172,7 @@ class _SciencepageState extends State<Sciencepage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'QUESTION ${currentIndex + 1}OF ${question.length}',
+                                'QUESTION ${currentIndex + 1} OF ${question.length}',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),

@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:quiznep/signinpage.dart';
 
 class Forgotpassword extends StatefulWidget {
   const Forgotpassword({super.key});
@@ -85,17 +87,54 @@ class _ForgotpasswordState extends State<Forgotpassword> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 60),
             child: Center(
-              child: Container(
-                height: 37,
-                width: 90,
-                decoration: BoxDecoration(
-                    color: const Color(0XFFEF4A27),
-                    borderRadius: BorderRadius.circular(17)),
-                child: const Center(
-                    child: Text(
-                  'Send ',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                )),
+              child: Column(
+                children: [
+                  InkWell(
+                    onTap: () async {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const Center(
+                              child: CircularProgressIndicator(
+                                color: Color(0XFFEF4A27),
+                              ),
+                            );
+                          });
+                      await Future.delayed(Duration(seconds: 2));
+                      Navigator.pop(context);
+
+                      final email = _email.text;
+                      FirebaseAuth.instance
+                          .sendPasswordResetEmail(email: email);
+
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      height: 37,
+                      width: 130,
+                      decoration: BoxDecoration(
+                          color: const Color(0XFFEF4A27),
+                          borderRadius: BorderRadius.circular(17)),
+                      child: const Center(
+                        child: Text(
+                          'Send ',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Signinpage()));
+                      },
+                      child: Text('Back to Login?'))
+                ],
               ),
             ),
           ),

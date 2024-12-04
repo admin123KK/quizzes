@@ -71,14 +71,14 @@ class _HistorypageState extends State<Historypage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Center(child: Text('Quiz Result')),
+            title: Text('Quiz Result'),
             icon: const Icon(
               Icons.book,
               color: Colors.black,
             ),
             titleTextStyle: const TextStyle(
                 fontWeight: FontWeight.bold, color: Colors.black),
-            content: Center(child: Text('Your total points is : $totalPoints')),
+            content: Text('Your total points is : $totalPoints'),
             contentTextStyle: const TextStyle(
                 fontWeight: FontWeight.bold, color: Colors.green),
             actions: [

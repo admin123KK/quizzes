@@ -71,19 +71,15 @@ class _QuizpageState extends State<Quizpage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Center(
-            child: Text('Quiz Result'),
-          ),
+          title: const Text('Quiz Result'),
           icon: const Icon(
             Icons.sports_basketball_outlined,
             color: Colors.black,
           ),
-          content: Center(
-            child: Text(
-              'Your total score is: $totalPoints',
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold, color: Colors.green),
-            ),
+          content: Text(
+            'Your total score is: $totalPoints',
+            style: const TextStyle(
+                fontWeight: FontWeight.bold, color: Colors.green),
           ),
           actions: [
             TextButton(
@@ -187,7 +183,7 @@ class _QuizpageState extends State<Quizpage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'QUESTION ${currentqIndex + 1} OF ${question.length}',
+                                'QUESTION ${currentqIndex + 1}  OF ${question.length}',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
