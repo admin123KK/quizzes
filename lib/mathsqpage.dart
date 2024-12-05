@@ -14,7 +14,7 @@ class _QuizpageState extends State<Quizpage> {
   int totalPoints = 0; // Track total points
   late Timer timer;
   int timeLeft = 5;
-  bool answered = false; // Track if the current question has been answered
+  bool answered = false;
 
   @override
   void initState() {
