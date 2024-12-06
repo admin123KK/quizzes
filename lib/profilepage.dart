@@ -14,12 +14,19 @@ class _ProfilepageState extends State<Profilepage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Profile'),
+        title: const Text(
+          'Profile',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+        ),
         backgroundColor: const Color(0XFFEF4A27),
         actions: const [
           Padding(
             padding: EdgeInsets.all(19.0),
-            child: Icon(Icons.settings_outlined),
+            child: Icon(
+              Icons.settings_outlined,
+              color: Colors.black,
+              size: 28,
+            ),
           )
         ],
       ),
@@ -88,10 +95,10 @@ class _ProfilepageState extends State<Profilepage> {
                                   ),
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 20),
+                                        horizontal: 25),
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                          MainAxisAlignment.center,
                                       children: [
                                         _buildStateItem(Icons.star_outline,
                                             'Points', '1000'),
@@ -216,6 +223,9 @@ class _ProfilepageState extends State<Profilepage> {
                                   const Text('Rank 1')
                                 ],
                               ),
+                              const SizedBox(
+                                width: 20,
+                              ),
                               Column(
                                 children: [
                                   Container(
@@ -248,6 +258,9 @@ class _ProfilepageState extends State<Profilepage> {
                                   ),
                                   const Text('Rank 3')
                                 ],
+                              ),
+                              const SizedBox(
+                                width: 20,
                               ),
                               Column(
                                 children: [
