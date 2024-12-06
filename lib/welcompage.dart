@@ -69,82 +69,66 @@ class _WelcompageState extends State<Welcompage> {
                               color: Color(0XFFEF4A27),
                               fontSize: 18),
                         ),
-                        Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            color: const Color(0XFFEF4A27),
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: Image.asset(
-                            'assets/image/male.png',
-                            fit: BoxFit.fill,
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Profilepage()));
+                          },
+                          child: Container(
+                            height: 50,
+                            width: 50,
+                            decoration: BoxDecoration(
+                              color: const Color(0XFFEF4A27),
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Image.asset(
+                              'assets/image/male.png',
+                              fit: BoxFit.fill,
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  Container(
-                    height: 90,
-                    width: 370,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'RECENT QUIZ',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Center(child: Text('Explore by testing your mind'))
-                        ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    child: Container(
+                      height: 70,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: const Color(0XFFEF4A27),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'PLAY QUIZ',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Center(child: Text('Explore by testing your mind'))
+                          ],
+                        ),
                       ),
                     ),
                   ),
                   const SizedBox(
                     height: 30,
                   ),
-                  Container(
-                    height: 200,
-                    width: 370,
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                          colors: [Colors.grey, Color(0XFFEF4A27)],
-                          begin: AlignmentDirectional.centerStart,
-                          end: Alignment.topRight),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: const Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Featured',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 19,
-                            ),
-                          ),
-                          SizedBox(height: 30),
-                          Text(
-                            'Take part in challenges\n with friends and others',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ],
-                      ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    child: Container(
+                      height: 200,
+                      width: double.infinity,
+                      child: Image.asset('assets/image/quiznight.png',
+                          fit: BoxFit.cover),
                     ),
                   ),
                   const SizedBox(

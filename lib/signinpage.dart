@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:quiznep/forgotpassword.dart';
 import 'package:quiznep/registerpage.dart';
-import 'package:quiznep/welcompage.dart';
 
 class Signinpage extends StatefulWidget {
   const Signinpage({super.key});
@@ -176,10 +175,8 @@ class _SigninpageState extends State<Signinpage> {
 
                     User? user = userCredential.user;
                     if (user != null && !user.emailVerified) {}
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Welcompage()));
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, 'WelcomePage/', (route) => false);
                   } on FirebaseAuthException catch (e) {
                     Navigator.of(context).pop();
                     if (e.code == 'invalid-email') {
