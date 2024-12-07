@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Sciencepage extends StatefulWidget {
@@ -26,6 +28,29 @@ class _SciencepageState extends State<Sciencepage> {
   void dispose() {
     super.dispose();
     timer.cancel();
+  }
+
+  void saveResult() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        print("Error user is not authenticated");
+        return;
+      } else {
+        print("Authenticated user");
+      }
+      final quizResult = {
+        'userEmail': user.email,
+        'Categories': 'Science',
+        'Points': totalPoints,
+        'dateTime': DateTime.now().toIso8601String(),
+      };
+      await FirebaseFirestore.instance
+          .collection('quizResults')
+          .add(quizResult);
+    } catch (e) {
+      print('Error while saving results $e');
+    }
   }
 
   void startTimer() {
@@ -88,6 +113,7 @@ class _SciencepageState extends State<Sciencepage> {
             actions: [
               TextButton(
                 onPressed: () {
+                  saveResult();
                   Navigator.pop(context);
                   Navigator.pop(context);
                 },

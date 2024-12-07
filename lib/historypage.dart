@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Historypage extends StatefulWidget {
@@ -26,6 +28,29 @@ class _HistorypageState extends State<Historypage> {
   void dispose() {
     timer.cancel;
     super.dispose();
+  }
+
+  void saveResult() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        print('User is not authenciated');
+        return;
+      } else {
+        print('Authenicated user ${user.uid}');
+      }
+      final quizResult = {
+        'userEmail': user.email,
+        'Categories': 'Histroy',
+        'Points': totalPoints,
+        'dateTime': DateTime.now().toIso8601String()
+      };
+      await FirebaseFirestore.instance
+          .collection('quizResults')
+          .add(quizResult);
+    } catch (e) {
+      print('Error Savging Result $e');
+    }
   }
 
   void startTimer() {
@@ -84,6 +109,7 @@ class _HistorypageState extends State<Historypage> {
             actions: [
               TextButton(
                   onPressed: () {
+                    saveResult();
                     Navigator.pop(context);
                     Navigator.pop(context);
                   },

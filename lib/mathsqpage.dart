@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Quizpage extends StatefulWidget {
@@ -26,6 +28,31 @@ class _QuizpageState extends State<Quizpage> {
   void dispose() {
     timer.cancel();
     super.dispose();
+  }
+
+  void saveQuizResult() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        print("User is not authenticated.");
+        return;
+      } else {
+        print("Authenticated user: ${user.uid}");
+      }
+
+      final quizResult = {
+        'userEmail': user.email,
+        'Categories': "Sports",
+        'Points': totalPoints,
+        'dateTime': DateTime.now().toIso8601String(),
+      };
+      await FirebaseFirestore.instance
+          .collection('quizResults')
+          .add(quizResult);
+      print('Quiz Successfully Update');
+    } catch (e) {
+      print("Error saving quiz result $e");
+    }
   }
 
   void startTimer() {
@@ -84,6 +111,7 @@ class _QuizpageState extends State<Quizpage> {
           actions: [
             TextButton(
               onPressed: () {
+                saveQuizResult();
                 Navigator.pop(context); // Close the dialog
                 Navigator.pop(context); // Go back to the previous screen
               },
