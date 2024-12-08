@@ -42,7 +42,7 @@ class _HistorypageState extends State<Historypage> {
       final quizResult = {
         'userEmail': user.email,
         'Categories': 'Histroy',
-        'Points': totalPoints,
+        'points': totalPoints,
         'dateTime': DateTime.now().toIso8601String()
       };
       await FirebaseFirestore.instance

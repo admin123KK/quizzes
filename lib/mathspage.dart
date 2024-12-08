@@ -43,7 +43,7 @@ class _MathpageState extends State<Mathpage> {
       final quizResult = {
         'userEmail': user.email,
         'Categories': 'Maths',
-        'Points': totalPoints,
+        'points': totalPoints,
         'dateTime': DateTime.now(),
       };
       await FirebaseFirestore.instance

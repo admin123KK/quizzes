@@ -43,7 +43,7 @@ class _QuizpageState extends State<Quizpage> {
       final quizResult = {
         'userEmail': user.email,
         'Categories': "Sports",
-        'Points': totalPoints,
+        'points': totalPoints,
         'dateTime': DateTime.now().toIso8601String(),
       };
       await FirebaseFirestore.instance
