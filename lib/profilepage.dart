@@ -12,11 +12,22 @@ class Profilepage extends StatefulWidget {
 
 class _ProfilepageState extends State<Profilepage> {
   int totalPoints = 0;
+  String userEmail = "";
 
   @override
   void initState() {
     super.initState();
     fetchUserPoints();
+    fetchUserEmail();
+  }
+
+  Future<void> fetchUserEmail() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() {
+        userEmail = user.email ?? 'is not available';
+      });
+    }
   }
 
   Future<void> fetchUserPoints() async {
@@ -113,6 +124,7 @@ class _ProfilepageState extends State<Profilepage> {
                                   color: Colors.black,
                                 ),
                               ),
+                              Text(userEmail),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 15, horizontal: 20),
