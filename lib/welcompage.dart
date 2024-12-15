@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:quiznep/edit_image.dart';
 import 'package:quiznep/explorepage.dart';
 import 'package:quiznep/profilepage.dart';
 
@@ -283,7 +282,7 @@ class _WelcompageState extends State<Welcompage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ImageUploader()));
+                                builder: (context) => Profilepage()));
                       },
                       child: const Icon(
                         Icons.person_outline,

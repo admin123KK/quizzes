@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:quiznep/Sciencepage.dart';
 import 'package:quiznep/historypage.dart';
-import 'package:quiznep/mathspage.dart';
 import 'package:quiznep/mathsqpage.dart';
 import 'package:quiznep/profilepage.dart';
+import 'package:quiznep/quiz_service.dart';
 import 'package:quiznep/welcompage.dart';
 import 'package:video_player/video_player.dart';
 
@@ -147,7 +147,9 @@ class _ExplorepageState extends State<Explorepage> {
                           Icons.calculate,
                           Colors.red,
                           context,
-                          const Mathpage(),
+                          const QuizPage(
+                            category: 'category1',
+                          ),
                         ),
                         buildCategoryBox(
                           'History',
