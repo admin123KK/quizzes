@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:quiznep/math_page.dart';
 
 class Historypage extends StatefulWidget {
   const Historypage({super.key});
@@ -12,22 +13,84 @@ class Historypage extends StatefulWidget {
 }
 
 class _HistorypageState extends State<Historypage> {
+  final QuizService _quizService = QuizService();
   int currentIndex = 0;
   int totalPoints = 0;
   late Timer timer;
   int timeLeft = 5;
   bool answered = false;
 
+  List<Map<String, dynamic>> questions = [];
+  late Map<String, dynamic> currentQuestion;
+
   @override
   void initState() {
     super.initState();
-    startTimer();
+    _loadQuestion();
   }
 
   @override
   void dispose() {
     timer.cancel;
     super.dispose();
+  }
+
+  Future<void> _loadQuestion() async {
+    try {
+      List<Map<String, dynamic>> fetchedQuestions = [];
+      for (int i = 1; i <= 5; i++) {
+        String questionId = 'question$i';
+        Map<String, dynamic> question =
+            await _quizService.fetchQuestion('History', questionId);
+        fetchedQuestions.add(question);
+      }
+      setState(() {
+        questions = fetchedQuestions;
+        currentQuestion = questions[currentIndex];
+        startTimer();
+      });
+    } catch (e) {
+      print("Error loading questions: $e");
+    }
+  }
+
+  void startTimer() {
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+      setState(() {
+        if (timeLeft > 0) {
+          timeLeft--;
+        } else {
+          moveToNextQuestion();
+        }
+      });
+    });
+  }
+
+  void moveToNextQuestion() {
+    setState(() {
+      if (currentIndex < questions.length - 1) {
+        currentIndex++;
+        timeLeft = 5;
+        answered = false;
+        currentQuestion = questions[currentIndex];
+      } else {
+        timer.cancel();
+        showResultDialog();
+      }
+    });
+  }
+
+  void checkAnswer(String selectedOption) {
+    if (answered) return;
+    setState(() {
+      answered = true;
+      if (selectedOption == currentQuestion['answer']) {
+        totalPoints += 10;
+      }
+      Future.delayed(Duration(seconds: 1), () {
+        moveToNextQuestion();
+      });
+    });
   }
 
   void saveResult() async {
@@ -51,44 +114,6 @@ class _HistorypageState extends State<Historypage> {
     } catch (e) {
       print('Error Savging Result $e');
     }
-  }
-
-  void startTimer() {
-    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
-      setState(() {
-        if (timeLeft > 0) {
-          timeLeft--;
-        } else {
-          moveToNextQuestion();
-        }
-      });
-    });
-  }
-
-  void moveToNextQuestion() {
-    setState(() {
-      if (currentIndex < question.length - 1) {
-        currentIndex++;
-        timeLeft = 5;
-        answered = false;
-      } else {
-        timer.cancel();
-        showResultDialog();
-      }
-    });
-  }
-
-  void checkAnswer(int index) {
-    if (answered) return;
-    setState(() {
-      answered = true;
-      if (options[currentIndex][index] == correctAnswers[currentIndex]) {
-        totalPoints += 10;
-      }
-      Future.delayed(const Duration(seconds: 1), () {
-        moveToNextQuestion();
-      });
-    });
   }
 
   void showResultDialog() {
@@ -122,44 +147,6 @@ class _HistorypageState extends State<Historypage> {
           );
         });
   }
-
-  final List<String> question = [
-    'Which event is often considered the start of the modern era?',
-    'Who was the first emperor of the Roman Empire?',
-    'Which treaty ended World War I?',
-    'What was the primary cause of the Cold War?',
-    'What year did the Berlin Wall fall, symbolizing the end of the Cold War?',
-  ];
-  final List<List<String>> options = [
-    [
-      'The Fall of Constantinople (1453)',
-      'The American Revolution (1775)',
-      ' The Industrial Revolution (1760-1840)',
-      'The French Revolution (1789)'
-    ],
-    ['Julius Caesar', 'Augustus Caesar', 'Nero', ' Constantine'],
-    [
-      'Treaty of Versailles',
-      'Treaty of Ghent',
-      ' Treaty of Paris',
-      ' Treaty of Westphalia'
-    ],
-    [
-      'A. Religious conflicts',
-      'Ideological differences between the USA and USSR',
-      'Disputes over territorial boundaries',
-      ' Competition for trade routes'
-    ],
-    [' Roman Empire', 'British Empire', 'Ottoman Empire', ' Mongol Empire']
-  ];
-
-  final List<String> correctAnswers = [
-    'The Fall of Constantinople (1453)',
-    'Augustus Caesar',
-    'Treaty of Versailles',
-    'Ideological differences between the USA and USSR',
-    'British Empire'
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -215,7 +202,7 @@ class _HistorypageState extends State<Historypage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'QUESTION ${currentIndex + 1} OF ${question.length}',
+                                'QUESTION ${currentIndex + 1} OF ${questions.length}',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
@@ -238,56 +225,58 @@ class _HistorypageState extends State<Historypage> {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 30),
                             child: Text(
-                              question[currentIndex],
+                              currentQuestion['question'] ?? '',
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 17),
                             ),
                           ),
                         ),
                         const SizedBox(height: 20),
-                        ...options[currentIndex].asMap().entries.map(
-                          (entry) {
-                            int idx = entry.key;
-                            String option = entry.value;
-                            bool isCorrect =
-                                option == correctAnswers[currentIndex];
-                            return GestureDetector(
-                              onTap: () => checkAnswer(idx),
-                              child: Container(
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 10),
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: answered
-                                      ? (isCorrect ? Colors.green : Colors.red)
-                                      : Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Row(
-                                  children: [
-                                    CircleAvatar(
-                                      backgroundColor: answered
-                                          ? (isCorrect
-                                              ? Colors.green
-                                              : Colors.red)
-                                          : Colors.grey,
-                                      child: Text(
-                                        String.fromCharCode(65 + idx),
-                                        style: const TextStyle(
-                                            color: Colors.white),
+                        ...(currentQuestion['options'] as List<dynamic>)
+                            .map((option) => GestureDetector(
+                                  onTap: () => checkAnswer(option),
+                                  child: Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 10),
+                                      padding: const EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                        color: answered
+                                            ? (option ==
+                                                    currentQuestion['answer']
+                                                ? Colors.green
+                                                : Colors.red)
+                                            : Colors.grey[200],
+                                        borderRadius: BorderRadius.circular(8),
                                       ),
-                                    ),
-                                    const SizedBox(width: 16),
-                                    Text(
-                                      option,
-                                      style: const TextStyle(fontSize: 16),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ).toList(),
+                                      child: Row(
+                                        children: [
+                                          CircleAvatar(
+                                            backgroundColor: answered
+                                                ? (option ==
+                                                        currentQuestion[
+                                                            'answer']
+                                                    ? Colors.green
+                                                    : Colors.red)
+                                                : Colors.grey,
+                                            child: Text(
+                                              String.fromCharCode(65 +
+                                                  (currentQuestion['options']
+                                                          as List)
+                                                      .indexOf(option)),
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 16),
+                                          Text(
+                                            option,
+                                            style:
+                                                const TextStyle(fontSize: 16),
+                                          ),
+                                        ],
+                                      )),
+                                ))
+                            .toList(),
                       ],
                     ),
                   )

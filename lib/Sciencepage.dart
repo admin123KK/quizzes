@@ -4,52 +4,61 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class Sciencepage extends StatefulWidget {
-  const Sciencepage({super.key});
+import 'math_page.dart';
+
+class SciencePage extends StatefulWidget {
+  const SciencePage({super.key});
 
   @override
-  State<Sciencepage> createState() => _SciencepageState();
+  State<SciencePage> createState() => _SciencePageState();
 }
 
-class _SciencepageState extends State<Sciencepage> {
+class _SciencePageState extends State<SciencePage> {
+  final QuizService _quizService = QuizService();
   int currentIndex = 0;
   int totalPoints = 0;
   int timeLeft = 5;
   bool answered = false;
+  bool isLoading = true;
   late Timer timer;
+
+  List<Map<String, dynamic>> questions = [];
+  late Map<String, dynamic> currentQuestion;
 
   @override
   void initState() {
     super.initState();
-    startTimer();
+    _loadQuestions();
   }
 
   @override
   void dispose() {
-    super.dispose();
     timer.cancel();
+    super.dispose();
   }
 
-  void saveResult() async {
+  Future<void> _loadQuestions() async {
+    // setState(() => isLoading = true);
     try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null) {
-        print("Error user is not authenticated");
-        return;
-      } else {
-        print("Authenticated user");
+      // Assuming question IDs are sequential: question1, question2, etc.
+      List<Map<String, dynamic>> fetchedQuestions = [];
+      for (int i = 1; i <= 5; i++) {
+        String questionId = 'question$i';
+        Map<String, dynamic> question = await _quizService.fetchQuestion(
+          'Science', // Replace with the correct category name
+          questionId,
+        );
+        fetchedQuestions.add(question);
       }
-      final quizResult = {
-        'userEmail': user.email,
-        'Categories': 'Science',
-        'points': totalPoints,
-        'dateTime': DateTime.now().toIso8601String(),
-      };
-      await FirebaseFirestore.instance
-          .collection('quizResults')
-          .add(quizResult);
+      setState(() {
+        questions = fetchedQuestions;
+        currentQuestion = questions[currentIndex];
+        isLoading = false;
+        startTimer();
+      });
     } catch (e) {
-      print('Error while saving results $e');
+      print("Error loading questions: $e");
+      setState(() => isLoading = false);
     }
   }
 
@@ -67,10 +76,11 @@ class _SciencepageState extends State<Sciencepage> {
 
   void moveToNextQuestion() {
     setState(() {
-      if (currentIndex < question.length - 1) {
+      if (currentIndex < questions.length - 1) {
         currentIndex++;
         timeLeft = 5;
         answered = false;
+        currentQuestion = questions[currentIndex];
       } else {
         timer.cancel();
         showResultDialog();
@@ -78,14 +88,14 @@ class _SciencepageState extends State<Sciencepage> {
     });
   }
 
-  void checkAnswer(int index) {
+  void checkAnswer(String selectedOption) {
     if (answered) return;
     setState(() {
       answered = true;
-      if (option[currentIndex][index] == correctAnswered[currentIndex]) {
+      if (selectedOption == currentQuestion['answer']) {
         totalPoints += 10;
       }
-      Future.delayed(const Duration(seconds: 1), () {
+      Future.delayed(Duration(seconds: 1), () {
         moveToNextQuestion();
       });
     });
@@ -93,62 +103,58 @@ class _SciencepageState extends State<Sciencepage> {
 
   void showResultDialog() {
     showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            icon: const Icon(
-              Icons.science_outlined,
-              color: Colors.black,
-            ),
-            title: const Text(
-              'Quiz Result',
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-            ),
-            content: Text(
-              'Your Total Point is:$totalPoints',
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold, color: Colors.green),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  saveResult();
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  'OK',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Color(0XFFEF4A27)),
-                ),
-              )
-            ],
-          );
-        });
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          icon: const Icon(Icons.science_outlined, color: Colors.black),
+          title: const Text(
+            'Quiz Result',
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+          content: Text(
+            'Your Total Point is: $totalPoints',
+            style: const TextStyle(
+                fontWeight: FontWeight.bold, color: Colors.green),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                saveResult();
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+              child: const Text(
+                'OK',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Color(0XFFEF4A27)),
+              ),
+            )
+          ],
+        );
+      },
+    );
   }
 
-  final List<String> question = [
-    'What is the chemical symbol for water?',
-    'Which planet is known as the Red Planet?',
-    'What gas do plants absorb from the atmosphere during photosynthesis?',
-    'Which part of the human brain controls balance and coordination??',
-    'What is the most abundant gas in Earth’s atmosphere?'
-  ];
-  final List<List<String>> option = [
-    ['O₂', 'H₂O', 'CO₂', 'OH'],
-    ['Venus ', 'Mars', 'Jupiter', 'Saturn'],
-    ['Oxygen ', 'Nitrogen', 'Carbon Dioxide', 'Hydrogen'],
-    ['Cerebrum', 'Cerebellum', 'Medulla', 'Hypothalamus'],
-    ['Oxygen', 'Nitrogen', 'Carbon Dioxide', 'Argon']
-  ];
-  final List<String> correctAnswered = [
-    'H₂O',
-    'Mars',
-    'Carbon Dioxide',
-    'Cerebellum',
-    'Nitrogen'
-  ];
+  void saveResult() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        print("Error: user is not authenticated");
+        return;
+      }
+      final quizResult = {
+        'userEmail': user.email,
+        'Categories': 'Science',
+        'points': totalPoints,
+        'dateTime': DateTime.now().toIso8601String(),
+      };
+      await FirebaseFirestore.instance
+          .collection('quizResults')
+          .add(quizResult);
+    } catch (e) {
+      print('Error while saving results: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -171,115 +177,123 @@ class _SciencepageState extends State<Sciencepage> {
           ),
         ],
       ),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    height: 650,
-                    width: double.infinity,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(25),
-                        topRight: Radius.circular(25),
-                      ),
-                    ),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Stack(
+              children: [
+                SingleChildScrollView(
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'QUESTION ${currentIndex + 1} OF ${question.length}',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              CircleAvatar(
-                                backgroundColor: const Color(0XFFEF4A27),
-                                child: Text(
-                                  '$timeLeft',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Center(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 30),
-                            child: Text(
-                              question[currentIndex],
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 17),
+                        Container(
+                          height: 650,
+                          width: double.infinity,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(25),
+                              topRight: Radius.circular(25),
                             ),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        ...option[currentIndex].asMap().entries.map(
-                          (entry) {
-                            int idx = entry.key;
-                            String option = entry.value;
-                            bool isCorrect =
-                                option == correctAnswered[currentIndex];
-                            return GestureDetector(
-                              onTap: () => checkAnswer(idx),
-                              child: Container(
-                                margin: const EdgeInsets.symmetric(
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
                                     horizontal: 20, vertical: 10),
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: answered
-                                      ? (isCorrect ? Colors.green : Colors.red)
-                                      : Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
                                 child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
+                                    Text(
+                                      'QUESTION ${currentIndex + 1} OF ${questions.length}',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
                                     CircleAvatar(
-                                      backgroundColor: answered
-                                          ? (isCorrect
-                                              ? Colors.green
-                                              : Colors.red)
-                                          : Colors.grey,
+                                      backgroundColor: const Color(0XFFEF4A27),
                                       child: Text(
-                                        String.fromCharCode(65 + idx),
+                                        '$timeLeft',
                                         style: const TextStyle(
                                             color: Colors.white),
                                       ),
                                     ),
-                                    const SizedBox(width: 16),
-                                    Text(
-                                      option,
-                                      style: const TextStyle(fontSize: 16),
-                                    ),
                                   ],
                                 ),
                               ),
-                            );
-                          },
-                        ).toList(),
+                              const SizedBox(height: 10),
+                              Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 30),
+                                  child: Text(
+                                    currentQuestion['question'] ?? '',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 17),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              ...(currentQuestion['options'] as List<dynamic>)
+                                  .map((option) => GestureDetector(
+                                        onTap: () => checkAnswer(option),
+                                        child: Container(
+                                          margin: const EdgeInsets.symmetric(
+                                              horizontal: 20, vertical: 10),
+                                          padding: const EdgeInsets.all(16),
+                                          decoration: BoxDecoration(
+                                            color: answered
+                                                ? (option ==
+                                                        currentQuestion[
+                                                            'answer']
+                                                    ? Colors.green
+                                                    : Colors.red)
+                                                : Colors.grey[200],
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              CircleAvatar(
+                                                backgroundColor: answered
+                                                    ? (option ==
+                                                            currentQuestion[
+                                                                'answer']
+                                                        ? Colors.green
+                                                        : Colors.red)
+                                                    : Colors.grey,
+                                                child: Text(
+                                                  String.fromCharCode(65 +
+                                                      (currentQuestion[
+                                                                  'options']
+                                                              as List)
+                                                          .indexOf(option)),
+                                                  style: const TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 16),
+                                              Text(
+                                                option.toString(),
+                                                style: const TextStyle(
+                                                    fontSize: 16),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ))
+                                  .toList(),
+                            ],
+                          ),
+                        )
                       ],
                     ),
-                  )
-                ],
-              ),
+                  ),
+                )
+              ],
             ),
-          )
-        ],
-      ),
     );
   }
 }

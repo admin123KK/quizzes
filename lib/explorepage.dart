@@ -163,7 +163,7 @@ class _ExplorepageState extends State<Explorepage> {
                           Icons.science_outlined,
                           Colors.red,
                           context,
-                          const Sciencepage(),
+                          const SciencePage(),
                         ),
                         buildCategoryBox(
                           'Sports',
