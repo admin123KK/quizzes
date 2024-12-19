@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:quiznep/Sciencepage.dart';
 import 'package:quiznep/historypage.dart';
+import 'package:quiznep/mathspage.dart';
 import 'package:quiznep/mathsqpage.dart';
 import 'package:quiznep/profilepage.dart';
-import 'package:quiznep/quiz_service.dart';
 import 'package:quiznep/welcompage.dart';
 import 'package:video_player/video_player.dart';
 
@@ -142,15 +142,8 @@ class _ExplorepageState extends State<Explorepage> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       children: [
-                        buildCategoryBox(
-                          'Maths',
-                          Icons.calculate,
-                          Colors.red,
-                          context,
-                          const QuizPage(
-                            category: 'category1',
-                          ),
-                        ),
+                        buildCategoryBox('Maths', Icons.calculate, Colors.red,
+                            context, Mathpage()),
                         buildCategoryBox(
                           'History',
                           Icons.book_outlined,

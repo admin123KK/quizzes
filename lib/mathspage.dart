@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:quiznep/math_page.dart';
 
 class Mathpage extends StatefulWidget {
   const Mathpage({super.key});
@@ -12,22 +13,52 @@ class Mathpage extends StatefulWidget {
 }
 
 class _MathpageState extends State<Mathpage> {
+  final QuizService _quizService = QuizService();
+
   int currentIndex = 0;
   int totalPoints = 0;
   int timeLeft = 5;
   late Timer timer;
   bool answered = false;
 
+  List<Map<String, dynamic>> questions = [];
+  late Map<String, dynamic> currentQuestion;
+
   @override
   void initState() {
     super.initState();
-    startTimer();
+    _loadQuestion();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    timer.cancel();
+  Future<void> _loadQuestion() async {
+    try {
+      List<Map<String, dynamic>> fetchedQuestions = [];
+      for (int i = 1; i <= 5; i++) {
+        String questionId = 'question$i';
+        Map<String, dynamic> question =
+            await _quizService.fetchQuestion('History', questionId);
+        fetchedQuestions.add(question);
+      }
+      setState(() {
+        questions = fetchedQuestions;
+        currentQuestion = questions[currentIndex];
+        startTimer();
+      });
+    } catch (e) {
+      print('Error in loading: $e');
+    }
+  }
+
+  void startTimer() {
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+      setState(() {
+        if (timeLeft > 0) {
+          timeLeft--;
+        } else {
+          moveToNextQuestion();
+        }
+      });
+    });
   }
 
   void saveResult() async {
@@ -54,24 +85,13 @@ class _MathpageState extends State<Mathpage> {
     }
   }
 
-  void startTimer() {
-    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
-      setState(() {
-        if (timeLeft > 0) {
-          timeLeft--;
-        } else {
-          moveToNextQuestion();
-        }
-      });
-    });
-  }
-
   void moveToNextQuestion() {
     setState(() {
-      if (currentIndex < question.length - 1) {
+      if (currentIndex < questions.length - 1) {
         currentIndex++;
         timeLeft = 5;
         answered = false;
+        currentQuestion = questions[currentIndex];
       } else {
         timer.cancel();
         showResultDialgo();
@@ -79,11 +99,10 @@ class _MathpageState extends State<Mathpage> {
     });
   }
 
-  void checkAnswer(int index) {
+  void checkAnswer(String selectedOption) {
     if (answered) return;
     setState(() {
-      answered = true;
-      if (option[currentIndex][index] == correctAnswered[currentIndex]) {
+      if (selectedOption == currentQuestion['answer']) {
         totalPoints += 10;
       }
       Future.delayed(Duration(seconds: 1), () {
@@ -127,22 +146,6 @@ class _MathpageState extends State<Mathpage> {
           );
         });
   }
-
-  final List<String> question = [
-    'What is the value of  144 + 12 ÷ 4 144 +12÷4?',
-    '3x−5=16, what is the value of 𝑥x?',
-    'What is the sum of the first 10 prime numbers?',
-    'A train travels 240 km in 4 hours. If it continues at the same speed, how far will it travel in 7 hours?',
-    'Solve for 𝑥x: 2𝑥2−8𝑥+−8x+6=0.',
-  ];
-  final List<List<String>> option = [
-    ['15', '18', '20', '21'],
-    ['5', '6', '7', '8'],
-    ['129', '142', '160', '210'],
-    ['360 km', '420 km', '560 km', '600 km'],
-    ['1 and 3', '2 and 4', '1 and 4', '2 and 3'],
-  ];
-  final List<String> correctAnswered = ['18', '7', '142', '560 km', '1 and 3'];
 
   @override
   Widget build(BuildContext context) {
@@ -195,7 +198,7 @@ class _MathpageState extends State<Mathpage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'QUESTION${currentIndex + 1} OF ${question.length}',
+                            'QUESTION ${currentIndex + 1} OF ${questions.length}',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           CircleAvatar(
@@ -215,53 +218,54 @@ class _MathpageState extends State<Mathpage> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 30),
                         child: Text(
-                          question[currentIndex],
+                          currentQuestion['question'] ?? '',
                           style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 17),
                         ),
                       ),
                     ),
                     const SizedBox(height: 20),
-                    ...option[currentIndex].asMap().entries.map(
-                      (entry) {
-                        int idx = entry.key;
-                        String option = entry.value;
-                        bool isCorrect =
-                            option == correctAnswered[currentIndex];
-                        return GestureDetector(
-                          onTap: () => checkAnswer(idx),
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: answered
-                                  ? (isCorrect ? Colors.green : Colors.red)
-                                  : Colors.grey[200],
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Row(
-                              children: [
-                                CircleAvatar(
-                                  backgroundColor: answered
-                                      ? (isCorrect ? Colors.green : Colors.red)
-                                      : Colors.grey,
-                                  child: Text(
-                                    String.fromCharCode(65 + idx),
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
+                    ...(currentQuestion['options'] as List<dynamic>)
+                        .map((option) => GestureDetector(
+                              onTap: () => checkAnswer(option),
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 10),
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: answered
+                                      ? (option = currentQuestion['answer']
+                                          ? Colors.green
+                                          : Colors.red)
+                                      : Colors.grey[200],
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
-                                const SizedBox(width: 16),
-                                Text(
-                                  option,
-                                  style: const TextStyle(fontSize: 16),
+                                child: Row(
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundColor: answered
+                                          ? (option = currentQuestion['answer']
+                                              ? Colors.green
+                                              : Colors.red)
+                                          : Colors.grey,
+                                      child: Text(
+                                        String.fromCharCode(65 +
+                                            (currentQuestion['options'] as List)
+                                                .indexOf(option)),
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Text(
+                                      option,
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ).toList(),
+                              ),
+                            ))
+                        .toList(),
                   ],
                 ),
               ),

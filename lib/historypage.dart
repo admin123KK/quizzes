@@ -202,7 +202,7 @@ class _HistorypageState extends State<Historypage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'QUESTION ${currentIndex + 1} OF ${questions.length}',
+                                'QUESTION  ${currentIndex + 1} OF ${questions.length}',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
