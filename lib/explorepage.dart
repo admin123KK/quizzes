@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:quiznep/Sciencepage.dart';
 import 'package:quiznep/historypage.dart';
-import 'package:quiznep/mathspage.dart';
 import 'package:quiznep/mathsqpage.dart';
 import 'package:quiznep/profilepage.dart';
 import 'package:quiznep/welcompage.dart';
 import 'package:video_player/video_player.dart';
+
+import 'mathspage.dart';
 
 class Explorepage extends StatefulWidget {
   const Explorepage({super.key});
@@ -156,7 +157,7 @@ class _ExplorepageState extends State<Explorepage> {
                           Icons.science_outlined,
                           Colors.red,
                           context,
-                          const SciencePage(),
+                          const Sciencepage(),
                         ),
                         buildCategoryBox(
                           'Sports',
