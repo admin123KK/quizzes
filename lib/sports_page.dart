@@ -3,17 +3,16 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:quiznep/quiz_service.dart';
 
-import 'quiz_service.dart';
-
-class Sciencepage extends StatefulWidget {
-  const Sciencepage({super.key});
+class Sportspage extends StatefulWidget {
+  const Sportspage({super.key});
 
   @override
-  State<Sciencepage> createState() => _SciencepageState();
+  State<Sportspage> createState() => _SportspageState();
 }
 
-class _SciencepageState extends State<Sciencepage> {
+class _SportspageState extends State<Sportspage> {
   final QuizService _quizService = QuizService();
   int currentIndex = 0;
   int totalPoints = 0;
@@ -44,7 +43,7 @@ class _SciencepageState extends State<Sciencepage> {
       for (int i = 1; i <= 5; i++) {
         String questionId = 'question$i';
         Map<String, dynamic> question =
-            await _quizService.fetchQuestion('Science', questionId);
+            await _quizService.fetchQuestion('categorie1', questionId);
         fetchedQuestions.add(question);
       }
       setState(() {
@@ -108,7 +107,7 @@ class _SciencepageState extends State<Sciencepage> {
       }
       final quizResult = {
         'userEmail': user.email,
-        'Categories': 'Science',
+        'Categories': 'Sports',
         'points': totalPoints,
         'dateTime': DateTime.now().toIso8601String()
       };
@@ -164,7 +163,7 @@ class _SciencepageState extends State<Sciencepage> {
             child: const Icon(Icons.arrow_back_ios)),
         backgroundColor: const Color(0XFFEF4A27),
         title: const Text(
-          'Histroy',
+          'Sports',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         actions: const [

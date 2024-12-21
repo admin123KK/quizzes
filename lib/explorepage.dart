@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:quiznep/Sciencepage.dart';
 import 'package:quiznep/historypage.dart';
-import 'package:quiznep/mathsqpage.dart';
 import 'package:quiznep/profilepage.dart';
+import 'package:quiznep/sports_page.dart';
 import 'package:quiznep/welcompage.dart';
 import 'package:video_player/video_player.dart';
 
@@ -164,7 +164,7 @@ class _ExplorepageState extends State<Explorepage> {
                           Icons.sports_soccer,
                           Colors.red,
                           context,
-                          const Quizpage(),
+                          const Sportspage(),
                         ),
                       ],
                     ),

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:quiznep/math_page.dart';
+import 'package:quiznep/quiz_service.dart';
 
 class Mathpage extends StatefulWidget {
   const Mathpage({super.key});
@@ -19,6 +19,7 @@ class _MathpageState extends State<Mathpage> {
   late Timer timer;
   int timeLeft = 5;
   bool answered = false;
+  bool isLoading = true;
 
   List<Map<String, dynamic>> questions = [];
   late Map<String, dynamic> currentQuestion;
@@ -31,11 +32,12 @@ class _MathpageState extends State<Mathpage> {
 
   @override
   void dispose() {
-    timer.cancel;
+    timer.cancel();
     super.dispose();
   }
 
   Future<void> _loadQuestion() async {
+    setState(() => isLoading = true);
     try {
       List<Map<String, dynamic>> fetchedQuestions = [];
       for (int i = 1; i <= 5; i++) {
@@ -48,6 +50,7 @@ class _MathpageState extends State<Mathpage> {
         questions = fetchedQuestions;
         currentQuestion = questions[currentIndex];
         startTimer();
+        isLoading = false;
       });
     } catch (e) {
       print("Error loading questions: $e");
@@ -104,7 +107,7 @@ class _MathpageState extends State<Mathpage> {
       }
       final quizResult = {
         'userEmail': user.email,
-        'Categories': 'Histroy',
+        'Categories': 'Maths',
         'points': totalPoints,
         'dateTime': DateTime.now().toIso8601String()
       };
@@ -133,7 +136,7 @@ class _MathpageState extends State<Mathpage> {
                 fontWeight: FontWeight.bold, color: Colors.green),
             actions: [
               TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     saveResult();
                     Navigator.pop(context);
                     Navigator.pop(context);
@@ -160,7 +163,7 @@ class _MathpageState extends State<Mathpage> {
             child: const Icon(Icons.arrow_back_ios)),
         backgroundColor: const Color(0XFFEF4A27),
         title: const Text(
-          'Histroy',
+          'Maths',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         actions: const [
@@ -175,117 +178,128 @@ class _MathpageState extends State<Mathpage> {
         ],
         centerTitle: true,
       ),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    height: 650,
-                    width: double.infinity,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
-                      ),
-                    ),
+      body: isLoading
+          ? Center(
+              child: CircularProgressIndicator(
+              color: Colors.grey,
+            ))
+          : Stack(
+              children: [
+                SingleChildScrollView(
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 22, vertical: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'QUESTION  ${currentIndex + 1} OF ${questions.length}',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              CircleAvatar(
-                                backgroundColor: const Color(0XFFEF4A27),
-                                child: Text(
-                                  '${timeLeft}',
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Center(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 30),
-                            child: Text(
-                              currentQuestion['question'] ?? '',
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 17),
+                        Container(
+                          height: 650,
+                          width: double.infinity,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20),
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        ...(currentQuestion['options'] as List<dynamic>)
-                            .map((option) => GestureDetector(
-                                  onTap: () => checkAnswer(option),
-                                  child: Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 20, vertical: 10),
-                                      padding: const EdgeInsets.all(16),
-                                      decoration: BoxDecoration(
-                                        color: answered
-                                            ? (option ==
-                                                    currentQuestion['answer']
-                                                ? Colors.green
-                                                : Colors.red)
-                                            : Colors.grey[200],
-                                        borderRadius: BorderRadius.circular(8),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 22, vertical: 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'QUESTION  ${currentIndex + 1} OF ${questions.length}',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    CircleAvatar(
+                                      backgroundColor: const Color(0XFFEF4A27),
+                                      child: Text(
+                                        '${timeLeft}',
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
                                       ),
-                                      child: Row(
-                                        children: [
-                                          CircleAvatar(
-                                            backgroundColor: answered
-                                                ? (option ==
-                                                        currentQuestion[
-                                                            'answer']
-                                                    ? Colors.green
-                                                    : Colors.red)
-                                                : Colors.grey,
-                                            child: Text(
-                                              String.fromCharCode(65 +
-                                                  (currentQuestion['options']
-                                                          as List)
-                                                      .indexOf(option)),
-                                              style: const TextStyle(
-                                                  color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 30),
+                                  child: Text(
+                                    currentQuestion['question'] ?? '',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 17),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              ...(currentQuestion['options'] as List<dynamic>)
+                                  .map((option) => GestureDetector(
+                                        onTap: () => checkAnswer(option),
+                                        child: Container(
+                                            margin: const EdgeInsets.symmetric(
+                                                horizontal: 20, vertical: 10),
+                                            padding: const EdgeInsets.all(16),
+                                            decoration: BoxDecoration(
+                                              color: answered
+                                                  ? (option ==
+                                                          currentQuestion[
+                                                              'answer']
+                                                      ? Colors.green
+                                                      : Colors.red)
+                                                  : Colors.grey[200],
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
                                             ),
-                                          ),
-                                          const SizedBox(width: 16),
-                                          Text(
-                                            option,
-                                            style:
-                                                const TextStyle(fontSize: 16),
-                                          ),
-                                        ],
-                                      )),
-                                ))
-                            .toList(),
+                                            child: Row(
+                                              children: [
+                                                CircleAvatar(
+                                                  backgroundColor: answered
+                                                      ? (option ==
+                                                              currentQuestion[
+                                                                  'answer']
+                                                          ? Colors.green
+                                                          : Colors.red)
+                                                      : Colors.grey,
+                                                  child: Text(
+                                                    String.fromCharCode(65 +
+                                                        (currentQuestion[
+                                                                    'options']
+                                                                as List)
+                                                            .indexOf(option)),
+                                                    style: const TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 16),
+                                                Text(
+                                                  option,
+                                                  style: const TextStyle(
+                                                      fontSize: 16),
+                                                ),
+                                              ],
+                                            )),
+                                      ))
+                                  .toList(),
+                            ],
+                          ),
+                        )
                       ],
                     ),
-                  )
-                ],
-              ),
+                  ),
+                )
+              ],
             ),
-          )
-        ],
-      ),
     );
   }
 }
