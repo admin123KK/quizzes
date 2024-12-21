@@ -43,7 +43,7 @@ class _SportspageState extends State<Sportspage> {
       for (int i = 1; i <= 5; i++) {
         String questionId = 'question$i';
         Map<String, dynamic> question =
-            await _quizService.fetchQuestion('categorie1', questionId);
+            await _quizService.fetchQuestion('category1', questionId);
         fetchedQuestions.add(question);
       }
       setState(() {
