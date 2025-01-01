@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quiznep/Sciencepage.dart';
 import 'package:quiznep/historypage.dart';
+import 'package:quiznep/poll_page.dart';
 import 'package:quiznep/profilepage.dart';
 import 'package:quiznep/sports_page.dart';
 import 'package:quiznep/welcompage.dart';
@@ -208,10 +209,18 @@ class _ExplorepageState extends State<Explorepage> {
                       size: 31,
                       color: Colors.black,
                     ),
-                    const Icon(
-                      Icons.stacked_bar_chart_outlined,
-                      size: 31,
-                      color: Colors.white,
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PollPage()));
+                      },
+                      child: const Icon(
+                        Icons.stacked_bar_chart_outlined,
+                        size: 31,
+                        color: Colors.white,
+                      ),
                     ),
                     InkWell(
                       onTap: () {

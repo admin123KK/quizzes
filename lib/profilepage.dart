@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:quiznep/explorepage.dart';
+import 'package:quiznep/poll_page.dart';
 
 class Profilepage extends StatefulWidget {
   const Profilepage({super.key});
@@ -304,8 +305,14 @@ class _ProfilepageState extends State<Profilepage> {
             child: const Icon(Icons.explore_outlined,
                 size: 31, color: Colors.white),
           ),
-          const Icon(Icons.stacked_bar_chart_outlined,
-              size: 31, color: Colors.white),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => PollPage()));
+            },
+            child: const Icon(Icons.stacked_bar_chart_outlined,
+                size: 31, color: Colors.white),
+          ),
           InkWell(
             onTap: () => Navigator.push(
               context,

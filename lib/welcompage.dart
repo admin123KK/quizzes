@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiznep/explorepage.dart';
+import 'package:quiznep/poll_page.dart';
 import 'package:quiznep/profilepage.dart';
 
 class Welcompage extends StatefulWidget {
@@ -272,10 +273,18 @@ class _WelcompageState extends State<Welcompage> {
                         color: Colors.white,
                       ),
                     ),
-                    const Icon(
-                      Icons.stacked_bar_chart_outlined,
-                      size: 31,
-                      color: Colors.white,
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PollPage()));
+                      },
+                      child: const Icon(
+                        Icons.stacked_bar_chart_outlined,
+                        size: 31,
+                        color: Colors.white,
+                      ),
                     ),
                     InkWell(
                       onTap: () {
