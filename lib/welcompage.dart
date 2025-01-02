@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:quiznep/explorepage.dart';
 import 'package:quiznep/poll_page.dart';
@@ -11,6 +12,7 @@ class Welcompage extends StatefulWidget {
 }
 
 class _WelcompageState extends State<Welcompage> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String greeting = "";
 
   @override
@@ -19,32 +21,41 @@ class _WelcompageState extends State<Welcompage> {
     super.initState();
   }
 
-  final List<String> items = [
-    "Sky",
-    "Abiskar",
-    "Ritu",
-    "Bibash",
-    "Ram Hari",
-    "Sushant",
-    "Manish",
-    "Sushant"
-  ];
-
   void updateGreeting() {
     DateTime now = DateTime.now();
-
     int hour = now.hour;
     if (hour < 12) {
-      setState(() {
-        greeting = "Good Morning";
-      });
+      greeting = "Good Morning";
     } else if (hour < 17) {
-      setState(() {
-        greeting = "Good Afternoon";
-      });
+      greeting = "Good Afternoon";
     } else {
       greeting = "Good Evening";
     }
+  }
+
+  Future<List<Map<String, dynamic>>> _fetchRankings() async {
+    QuerySnapshot snapshot = await _firestore.collection('quizResults').get();
+
+    Map<String, int> userPoints = {};
+
+    for (var doc in snapshot.docs) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      String userEmail = data['userEmail'];
+      int points = data['points'];
+
+      if (userPoints.containsKey(userEmail)) {
+        userPoints[userEmail] = userPoints[userEmail]! + points;
+      } else {
+        userPoints[userEmail] = points;
+      }
+    }
+
+    List<Map<String, dynamic>> rankings = userPoints.entries
+        .map((entry) => {'userEmail': entry.key, 'points': entry.value})
+        .toList();
+
+    rankings.sort((a, b) => b['points'].compareTo(a['points']));
+    return rankings;
   }
 
   @override
@@ -96,51 +107,8 @@ class _WelcompageState extends State<Welcompage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25),
                     child: Container(
-                      height: 70,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: const Color(0XFFEF4A27),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'PLAY QUIZ',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Center(child: Text('Explore by testing your mind'))
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                    child: Container(
-                      height: 200,
-                      width: double.infinity,
-                      child: Image.asset('assets/image/quiznight.png',
-                          fit: BoxFit.cover),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                    child: Container(
                       height: 400,
                       width: double.infinity,
-                      // Adjust height as needed
                       decoration: BoxDecoration(
                         color: Colors.grey.shade300,
                         borderRadius: BorderRadius.circular(17),
@@ -159,27 +127,36 @@ class _WelcompageState extends State<Welcompage> {
                             ),
                             const SizedBox(height: 10),
                             Expanded(
-                              child: ListView.builder(
-                                itemCount:
-                                    8, // Number of items in the ranking list
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 8.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        // Text(
-                                        //   '${index + 1}. Sky ${index + 1}',
-                                        //   style: const TextStyle(
-                                        //     fontSize: 16,
-                                        //     fontWeight: FontWeight.w500,
-                                        //   ),
-                                        // ),
-                                        Container(
+                              child: FutureBuilder<List<Map<String, dynamic>>>(
+                                future: _fetchRankings(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  }
+
+                                  if (!snapshot.hasData ||
+                                      snapshot.data!.isEmpty) {
+                                    return const Center(
+                                        child: Text('No data available'));
+                                  }
+
+                                  final rankings = snapshot.data!;
+
+                                  return ListView.builder(
+                                    itemCount: rankings.length,
+                                    itemBuilder: (context, index) {
+                                      final user = rankings[index];
+                                      final userEmail = user['userEmail'];
+                                      final points = user['points'];
+
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 8.0),
+                                        child: Container(
                                           height: 50,
-                                          width: 360,
+                                          width: double.infinity,
                                           decoration: BoxDecoration(
                                             color: const Color(0XFFEF4A27),
                                             borderRadius:
@@ -187,47 +164,45 @@ class _WelcompageState extends State<Welcompage> {
                                           ),
                                           child: Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
+                                                MainAxisAlignment.start,
                                             children: [
-                                              Image.asset(
-                                                  'assets/image/male.png'),
-                                              Text('${index + 1}'),
-                                              const SizedBox(
-                                                width: 20,
-                                              ),
-                                              Text(
-                                                items[index],
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              const SizedBox(
-                                                width: 139,
+                                              CircleAvatar(
+                                                backgroundColor:
+                                                    Color(0XFFEF4A27),
+                                                child: Text(
+                                                  (index + 1).toString(),
+                                                  style: const TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
                                               ),
                                               Row(
-                                                // mainAxisAlignment:
-                                                //     MainAxisAlignment.end,
                                                 children: [
                                                   Text(
-                                                    '${(1000 - index * 10)}.pt',
+                                                    userEmail,
                                                     style: const TextStyle(
                                                         fontWeight:
-                                                            FontWeight.bold),
+                                                            FontWeight.bold,
+                                                        color: Colors.white),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 160,
+                                                  ),
+                                                  Text(
+                                                    '$points pts',
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.white),
                                                   ),
                                                 ],
-                                              )
+                                              ),
                                             ],
                                           ),
                                         ),
-                                        // Text(
-                                        //   '${(1000 - index * 10)} pts',
-                                        //   style: const TextStyle(
-                                        //     fontSize: 16,
-                                        //     color: Colors.black54,
-                                        //   ),
-                                        // ),
-                                      ],
-                                    ),
+                                      );
+                                    },
                                   );
                                 },
                               ),
@@ -236,9 +211,6 @@ class _WelcompageState extends State<Welcompage> {
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 30,
                   ),
                 ],
               ),
