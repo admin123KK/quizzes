@@ -75,7 +75,7 @@ class _WelcompageState extends State<Welcompage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '$greeting,\nManju Karki',
+                          '$greeting,\nManju Karkii',
                           style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Color(0XFFEF4A27),
