@@ -70,7 +70,7 @@ class _WelcompageState extends State<Welcompage> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 25, vertical: 50),
+                        horizontal: 25, vertical: 40),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -103,6 +103,22 @@ class _WelcompageState extends State<Welcompage> {
                         ),
                       ],
                     ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    child: Container(
+                      height: 280,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: Colors.black,
+                          image: const DecorationImage(
+                              image: AssetImage('assets/image/quizc.png'),
+                              fit: BoxFit.fill),
+                          borderRadius: BorderRadius.circular(17)),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 40,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -168,7 +184,7 @@ class _WelcompageState extends State<Welcompage> {
                                             children: [
                                               CircleAvatar(
                                                 backgroundColor:
-                                                    Color(0XFFEF4A27),
+                                                    const Color(0XFFEF4A27),
                                                 child: Text(
                                                   (index + 1).toString(),
                                                   style: const TextStyle(
@@ -186,8 +202,8 @@ class _WelcompageState extends State<Welcompage> {
                                                             FontWeight.bold,
                                                         color: Colors.white),
                                                   ),
-                                                  SizedBox(
-                                                    width: 160,
+                                                  const SizedBox(
+                                                    width: 108,
                                                   ),
                                                   Text(
                                                     '$points pts',
