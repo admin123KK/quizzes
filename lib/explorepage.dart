@@ -18,6 +18,18 @@ class Explorepage extends StatefulWidget {
 
 class _ExplorepageState extends State<Explorepage> {
   late VideoPlayerController _controller;
+  final TextEditingController _searchController = TextEditingController();
+  late FocusNode _searchFocusNode;
+  bool _showDropdown = false;
+
+  final List<Map<String, dynamic>> _categories = [
+    {'title': 'Maths', 'icon': Icons.calculate, 'page': Mathpage()},
+    {'title': 'History', 'icon': Icons.book_outlined, 'page': Historypage()},
+    {'title': 'Science', 'icon': Icons.science_outlined, 'page': Sciencepage()},
+    {'title': 'Sports', 'icon': Icons.sports_soccer, 'page': Sportspage()},
+  ];
+
+  List<Map<String, dynamic>> _filteredCategories = [];
 
   @override
   void initState() {
@@ -25,16 +37,37 @@ class _ExplorepageState extends State<Explorepage> {
     _controller = VideoPlayerController.network(
       'https://resource.flexclip.com/templates/video/720p/travel-agency-ad-city-paris-urban-promotional-vlog.mp4',
     )..initialize().then((_) {
-        setState(() {}); // Rebuild to show the video once initialized
-        _controller.play(); // Autoplay the video
-        _controller.setLooping(true); // Loop the video
+        setState(() {});
+        _controller.play();
+        _controller.setLooping(true);
       });
+
+    _searchFocusNode = FocusNode();
+    _searchFocusNode.addListener(() {
+      setState(() {
+        _showDropdown = _searchFocusNode.hasFocus;
+      });
+    });
+
+    // Initialize filtered categories
+    _filteredCategories = _categories;
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _searchController.dispose();
+    _searchFocusNode.dispose();
     super.dispose();
+  }
+
+  void _filterCategories(String query) {
+    setState(() {
+      _filteredCategories = _categories
+          .where((category) =>
+              category['title'].toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    });
   }
 
   @override
@@ -50,7 +83,7 @@ class _ExplorepageState extends State<Explorepage> {
                 children: [
                   // Explore Title
                   const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25, vertical: 50),
+                    padding: EdgeInsets.symmetric(horizontal: 25, vertical: 30),
                     child: Text(
                       'Explore',
                       style: TextStyle(
@@ -60,31 +93,80 @@ class _ExplorepageState extends State<Explorepage> {
                       ),
                     ),
                   ),
-                  // Search Bar
+                  // Search Bar with Dropdown
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25),
-                    child: Container(
-                      height: 40,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(17),
-                      ),
-                      child: const TextField(
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Search',
-                          hintStyle: TextStyle(color: Colors.grey),
-                          prefixIcon: Icon(
-                            Icons.search_rounded,
-                            color: Colors.grey,
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 40,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade300,
+                            borderRadius: BorderRadius.circular(17),
                           ),
-                          contentPadding: EdgeInsets.all(10),
+                          child: TextField(
+                            controller: _searchController,
+                            focusNode: _searchFocusNode,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Search',
+                              hintStyle: TextStyle(color: Colors.grey),
+                              prefixIcon: Icon(
+                                Icons.search_rounded,
+                                color: Colors.grey,
+                              ),
+                              contentPadding: EdgeInsets.all(10),
+                            ),
+                            onChanged: (query) {
+                              _filterCategories(query);
+                            },
+                          ),
                         ),
-                      ),
+                        if (_showDropdown && _filteredCategories.isNotEmpty)
+                          Container(
+                            margin: const EdgeInsets.only(top: 10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.3),
+                                  blurRadius: 5,
+                                  spreadRadius: 2,
+                                ),
+                              ],
+                            ),
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: _filteredCategories.length,
+                              itemBuilder: (context, index) {
+                                final category = _filteredCategories[index];
+                                return ListTile(
+                                  leading: Icon(
+                                    category['icon'],
+                                    color: Colors.red,
+                                  ),
+                                  title: Text(category['title']),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            category['page'] as Widget,
+                                      ),
+                                    );
+                                    _searchController.clear();
+                                    _searchFocusNode.unfocus();
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 35),
+                  const SizedBox(height: 20),
                   // Top Picks
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 35, vertical: 5),
@@ -109,8 +191,7 @@ class _ExplorepageState extends State<Explorepage> {
                           ? ClipRRect(
                               borderRadius: BorderRadius.circular(17),
                               child: FittedBox(
-                                fit: BoxFit
-                                    .cover, // Adjust the fit property as needed
+                                fit: BoxFit.cover,
                                 child: SizedBox(
                                   width: _controller.value.size.width,
                                   height: _controller.value.size.height,
@@ -118,9 +199,7 @@ class _ExplorepageState extends State<Explorepage> {
                                 ),
                               ),
                             )
-                          : const Center(
-                              child:
-                                  CircularProgressIndicator()), // Show while video is loading
+                          : const Center(child: CircularProgressIndicator()),
                     ),
                   ),
                   const SizedBox(height: 35),
@@ -143,31 +222,17 @@ class _ExplorepageState extends State<Explorepage> {
                       crossAxisSpacing: 10,
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      children: [
-                        buildCategoryBox('Maths', Icons.calculate, Colors.red,
-                            context, Mathpage()),
-                        buildCategoryBox(
-                          'History',
-                          Icons.book_outlined,
-                          Colors.red,
-                          context,
-                          const Historypage(),
-                        ),
-                        buildCategoryBox(
-                          'Science',
-                          Icons.science_outlined,
-                          Colors.red,
-                          context,
-                          const Sciencepage(),
-                        ),
-                        buildCategoryBox(
-                          'Sports',
-                          Icons.sports_soccer,
-                          Colors.red,
-                          context,
-                          const Sportspage(),
-                        ),
-                      ],
+                      children: _filteredCategories
+                          .map(
+                            (category) => buildCategoryBox(
+                              category['title'],
+                              category['icon'],
+                              Colors.red,
+                              context,
+                              category['page'] as Widget,
+                            ),
+                          )
+                          .toList(),
                     ),
                   ),
                 ],
@@ -212,9 +277,11 @@ class _ExplorepageState extends State<Explorepage> {
                     InkWell(
                       onTap: () {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PollPage()));
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PollPage(),
+                          ),
+                        );
                       },
                       child: const Icon(
                         Icons.stacked_bar_chart_outlined,
@@ -246,39 +313,44 @@ class _ExplorepageState extends State<Explorepage> {
       ),
     );
   }
-}
 
-// Category Box Widget
-Widget buildCategoryBox(String title, IconData icon, Color color,
-    BuildContext context, Widget page) {
-  return InkWell(
-    onTap: () {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => page));
-    },
-    child: Container(
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            size: 40,
-            color: Colors.white,
-          ),
-          const SizedBox(height: 10),
-          Text(
-            title,
-            style: const TextStyle(
+  Widget buildCategoryBox(
+    String title,
+    IconData icon,
+    Color color,
+    BuildContext context,
+    Widget page,
+  ) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => page),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 30,
               color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
             ),
-          ),
-        ],
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 12,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
