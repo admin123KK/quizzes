@@ -126,7 +126,7 @@ class _WelcompageState extends State<Welcompage> {
                       height: 400,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
+                        color: Colors.grey.shade200,
                         borderRadius: BorderRadius.circular(17),
                       ),
                       child: Padding(
@@ -173,10 +173,12 @@ class _WelcompageState extends State<Welcompage> {
                                         child: Container(
                                           height: 50,
                                           width: double.infinity,
-                                          decoration: BoxDecoration(
-                                            color: const Color(0XFFEF4A27),
-                                            borderRadius:
-                                                BorderRadius.circular(17),
+                                          decoration: const BoxDecoration(
+                                            color: Color(0XFFEF4A27),
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(25),
+                                                bottomLeft:
+                                                    Radius.circular(25)),
                                           ),
                                           child: Row(
                                             mainAxisAlignment:

@@ -40,7 +40,10 @@ class _PollPageState extends State<PollPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0XFFEF4A27),
-        title: Text('Ranking'),
+        title: const Text(
+          'Leaderboard',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
       ),
       body: Padding(
@@ -85,7 +88,7 @@ class _PollPageState extends State<PollPage> {
                           userEmail,
                         ),
                         Text(
-                          '$points Points',
+                          '$points pts',
                           style: const TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
                         )
