@@ -124,7 +124,7 @@ class _SportspageState extends State<Sportspage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Quiz Result'),
+            title: Text('Quiz Resultt'),
             icon: const Icon(
               Icons.book,
               color: Colors.black,
