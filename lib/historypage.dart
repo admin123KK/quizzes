@@ -125,7 +125,7 @@ class _HistorypageState extends State<Historypage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Quiz Result'),
+            title: const Text('Quiz Result'),
             icon: const Icon(
               Icons.book,
               color: Colors.black,

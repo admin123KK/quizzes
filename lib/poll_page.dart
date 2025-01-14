@@ -41,7 +41,7 @@ class _PollPageState extends State<PollPage> {
       appBar: AppBar(
         backgroundColor: Color(0XFFEF4A27),
         title: const Text(
-          'Leaderboardd',
+          'Leaderboard',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
